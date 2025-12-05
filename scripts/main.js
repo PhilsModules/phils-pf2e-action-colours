@@ -1,7 +1,7 @@
 
 const MOD_ID = "phils-pf2e-action-colours";
 
-// Helper: detect v13+
+// Detect v13+
 function isV13Plus() {
   try {
     const gen = (game?.release?.generation ?? parseInt((game?.version ?? "0").split(".")[0] || "0"));
@@ -150,7 +150,7 @@ Hooks.once("ready", () => {
     console.error(`${MOD_ID}: failed to wrap TokenRuler _getSegmentStyle`, e);
   }
 
-  // Wrap TokenRuler grid highlight styling so squares match the segment color
+  // Wrap TokenRuler grid highlight styling
   try {
     libWrapper.register(MOD_ID, "foundry.canvas.placeables.tokens.TokenRuler.prototype._getGridHighlightStyle",
       function (wrapped, waypoint, offset) {
@@ -178,13 +178,13 @@ Hooks.once("ready", () => {
 /** Return actor speed in scene units for this ruler. */
 function getSpeedForRuler(ruler) {
   // Prefer token ruler's actor
-  const actor = ruler?.token?.actor
-    ?? canvas?.tokens?.controlled?.[0]?.actor
-    ?? null;
+  const actor = ruler?.token?.actor ?? canvas?.tokens?.controlled?.[0]?.actor ?? null;
   if (!actor) return null;
+
   const path = String(game.settings.get(MOD_ID, "speedAttribute") || "");
   let v = foundry?.utils?.getProperty?.(actor, path);
-  // Try common shapes
+
+  // Parse variations
   if (typeof v === "number") return v;
   if (v && typeof v.total === "number") return v.total;
   if (v && typeof v.value === "number") return v.value;
@@ -206,26 +206,13 @@ function pickColor(distance, baseSpeed) {
 
   if (walk <= 0) return unreachableColor;
 
-  // Allow a small epsilon to avoid flicker at boundary
   const eps = 1e-6;
   if (distance <= walk + eps) return walkColor;
-
-  // Ring 2 (Dash 1)
   if (m >= 2 && distance <= (walk * 2) + eps) return dashColor;
-
-  // Ring 3 (Dash 2) - only if multiplier is at least 3
   if (m >= 3 && distance <= (walk * 3) + eps) return dashColor2;
 
-  // If multiplier is higher (e.g. 4), we just keep returning the last color? 
-  // Or do we strictly stop at 3 for orange? 
-  // Logic: if m > 3, we allow extending valid movement. 
-  // Let's simpler logic: if distance <= walk * m -> check which band it falls in.
-  if (m > 1 && distance <= (walk * m) + eps) {
-    // We already handled <= 2 and <= 3 above. 
-    // If we are here, it means distance > 3*walk (so m must be > 3).
-    // Let's use dashColor2 for anything > 2*walk currently.
-    return dashColor2;
-  }
+  // Fallback for higher multipliers
+  if (m > 1 && distance <= (walk * m) + eps) return dashColor2;
 
   return unreachableColor;
 }
