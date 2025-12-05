@@ -29,7 +29,7 @@ function registerSettings() {
     config: true,
     type: Number,
     range: { min: 0, max: 5, step: 1 },
-    default: 2
+    default: 3
   });
 
   game.settings.register(MOD_ID, "walkColor", {
@@ -90,6 +90,13 @@ Hooks.once("ready", () => {
   if (currentSpeedAttr === "system.attributes.speed.total" || currentSpeedAttr === "system.attributes.speed") {
     console.log(`${MOD_ID}: Migrating deprecated speed attribute to system.movement.speeds.land`);
     game.settings.set(MOD_ID, "speedAttribute", "system.movement.speeds.land");
+  }
+
+  // Migration: default multiplier to 3 if it was 2 (std value)
+  const currentMult = game.settings.get(MOD_ID, "dashMultiplier");
+  if (currentMult === 2) {
+    console.log(`${MOD_ID}: Auto-updating Dash Multiplier to 3 for PF2e Action Color support.`);
+    game.settings.set(MOD_ID, "dashMultiplier", 3);
   }
 
   if (!globalThis.libWrapper) {
