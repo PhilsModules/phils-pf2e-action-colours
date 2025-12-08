@@ -2,7 +2,7 @@
 
 ![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen)
 ![Pathfinder 2e](https://img.shields.io/badge/System-PF2e-blue)
-![License](https://img.shields.io/badge/License-MIT-blue)
+![License](https://img.shields.io/badge/License-GPLv3-blue)
 ![Version](https://img.shields.io/badge/Version-1.2.0-orange)
 [![Changelog](https://img.shields.io/badge/CHECK-Changelog-blueviolet)](Updates.md)
 [![Patreon](https://img.shields.io/badge/Support-Patreon-ff424d?logo=patreon)](https://www.patreon.com/PhilsModules)
@@ -101,3 +101,4 @@ This module is licensed under the [MIT License](LICENSE).
     </a>
     <p>Made with ❤️ for the Foundry VTT Community</p>
 </div>
+
