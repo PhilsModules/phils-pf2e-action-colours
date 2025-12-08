@@ -103,6 +103,3 @@ This module is licensed under the [GNU General Public License v3.0](LICENSE).
     </a>
     <p>Made with ❤️ for the Foundry VTT Community</p>
 </div>
-
-
-
