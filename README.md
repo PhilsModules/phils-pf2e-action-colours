@@ -1,11 +1,13 @@
 # Phil's PF2e Action Colours 🚥
 
 ![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen)
-![Pathfinder 2e](https://img.shields.io/badge/System-PF2e-blue)
+![Foundry v12 Compatible](https://img.shields.io/badge/Foundry-v12-green)
 ![License](https://img.shields.io/badge/License-GPLv3-blue)
 ![Version](https://img.shields.io/badge/Version-1.2.0-orange)
-[![Changelog](https://img.shields.io/badge/CHECK-Changelog-blueviolet)](Updates.md)
-[![Patreon](https://img.shields.io/badge/Support-Patreon-ff424d?logo=patreon)](https://www.patreon.com/PhilsModules)
+
+
+<a href="Updates.md"><img src="https://img.shields.io/badge/CHECK-Changelog-blue" style="height: 25px;"></a>
+<a href="https://www.patreon.com/PhilsModules"><img src="https://img.shields.io/badge/SUPPORT-Patreon-ff424d?logo=patreon" style="height: 25px;"></a>
 
 **Phil's PF2e Action Colours** brings the Pathfinder 2e **3-Action Economy** visualization to Foundry V13.
 It upgrades the native Token Drag Measurement with clear, color-coded sections showing exactly how many actions a move will cost.
@@ -101,4 +103,5 @@ This module is licensed under the [MIT License](LICENSE).
     </a>
     <p>Made with ❤️ for the Foundry VTT Community</p>
 </div>
+
 
