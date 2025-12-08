@@ -1,0 +1,46 @@
+{
+    "phils-pf2e-action-colours": {
+        "settings": {
+            "speedAttribute": {
+                "name": "Speed Attribute Path",
+                "hint": "Object path on the actor to read base speed from (PF2e default works out of the box)."
+            },
+            "dashMultiplier": {
+                "name": "Action Rings / Multiplier",
+                "hint": "2 = Two-Action Ring (Yellow), 3 = Three-Action Ring (Orange). 0 disables the secondary ring."
+            },
+            "walkColor": {
+                "name": "Walk Color (1 Action)"
+            },
+            "dashColor": {
+                "name": "Dash Color (2 Actions)"
+            },
+            "dashColor2": {
+                "name": "Dash Color (3 Actions)"
+            },
+            "unreachableColor": {
+                "name": "Unreachable Color"
+            },
+            "smartRouting": {
+                "name": "Smart Routing (Beta)",
+                "hint": "If enabled, dragging a token will automatically route around walls (A* Pathfinding)."
+            },
+            "routingMode": {
+                "name": "Routing Mode",
+                "hint": "When should Smart Routing be active?",
+                "choices": {
+                    "always": "Always",
+                    "combat": "Only in Combat"
+                }
+            },
+            "ghostTrail": {
+                "name": "Show Ghost Trail",
+                "hint": "Shows the path a token has taken this round when hovering over it."
+            },
+            "fallbackSpeed": {
+                "name": "Fallback Speed",
+                "hint": "Used when measuring distance with no token (e.g. Measure Tool)."
+            }
+        }
+    }
+}

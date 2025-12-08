@@ -1,0 +1,46 @@
+{
+    "phils-pf2e-action-colours": {
+        "settings": {
+            "speedAttribute": {
+                "name": "Geschwindigkeits-Attribut Pfad",
+                "hint": "Objektpfad zum Auslesen der Geschwindigkeit (PF2e Standard funktioniert ab Werk)."
+            },
+            "dashMultiplier": {
+                "name": "Aktions-Ringe / Multiplikator",
+                "hint": "2 = Zwei-Aktionen Ring (Gelb), 3 = Drei-Aktionen Ring (Orange). 0 deaktiviert den sekundären Ring."
+            },
+            "walkColor": {
+                "name": "Bewegungs-Farbe (1 Aktion)"
+            },
+            "dashColor": {
+                "name": "Sprint-Farbe (2 Aktionen)"
+            },
+            "dashColor2": {
+                "name": "Sprint-Farbe (3 Aktionen)"
+            },
+            "unreachableColor": {
+                "name": "Unerreichbar-Farbe"
+            },
+            "smartRouting": {
+                "name": "Smart Routing (Beta)",
+                "hint": "Wenn aktiviert, weichen Tokens beim Ziehen automatisch Wänden aus (A* Pfadfindung)."
+            },
+            "routingMode": {
+                "name": "Routing Modus",
+                "hint": "Wann soll Smart Routing aktiv sein?",
+                "choices": {
+                    "always": "Immer",
+                    "combat": "Nur im Kampf"
+                }
+            },
+            "ghostTrail": {
+                "name": "Geisterpfad anzeigen",
+                "hint": "Zeigt beim Drüberfahren den Weg an, den das Token in dieser Runde zurückgelegt hat."
+            },
+            "fallbackSpeed": {
+                "name": "Fallback Geschwindigkeit",
+                "hint": "Wird genutzt, wenn kein Token gemessen wird (z.B. Messtool)."
+            }
+        }
+    }
+}

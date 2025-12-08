@@ -1,4 +1,7 @@
 
+import { SmartFinder } from "./pathfinding.js";
+import { GhostTrail } from "./ghost-trail.js";
+
 const MOD_ID = "phils-pf2e-action-colours";
 
 // Detect v13+
@@ -13,18 +16,74 @@ function isV13Plus() {
 
 // Settings
 function registerSettings() {
-  game.settings.register(MOD_ID, "speedAttribute", {
-    name: "Speed attribute path",
-    hint: "Object path on the actor to read base speed from (PF2e default works out of the box).",
+  const S = (key, data) => game.settings.register(MOD_ID, key, data);
+  const I = (key) => `phils-pf2e-action-colours.settings.${key}`;
+
+  // Helper to safely localize
+  const L = (key) => {
+    const stringId = I(key);
+    const localized = game.i18n.localize(stringId);
+    // Debug check
+    if (localized === stringId) console.warn(`[${MOD_ID}] Missing translation for ${stringId}`);
+    return localized;
+  };
+
+  // --- Core Configuration ---
+  S("speedAttribute", {
+    name: L("speedAttribute.name"),
+    hint: L("speedAttribute.hint"),
     scope: "world",
     config: true,
     type: String,
     default: "system.movement.speeds.land"
   });
 
-  game.settings.register(MOD_ID, "dashMultiplier", {
-    name: "Dash multiplier / action rings",
-    hint: "2 → two-action ring (Yellow), 3 → three-action ring (Orange). 0 disables the secondary ring.",
+  S("fallbackSpeed", {
+    name: L("fallbackSpeed.name"),
+    hint: L("fallbackSpeed.hint"),
+    scope: "world",
+    config: true,
+    type: Number,
+    range: { min: 0, max: 200, step: 5 },
+    default: 30
+  });
+
+  // --- Visuals: Colors ---
+  S("walkColor", {
+    name: L("walkColor.name"),
+    scope: "world",
+    config: true,
+    type: String,
+    default: "#00ff00"
+  });
+
+  S("dashColor", {
+    name: L("dashColor.name"),
+    scope: "world",
+    config: true,
+    type: String,
+    default: "#ffff00"
+  });
+
+  S("dashColor2", {
+    name: L("dashColor2.name"),
+    scope: "world",
+    config: true,
+    type: String,
+    default: "#FFA500"
+  });
+
+  S("unreachableColor", {
+    name: L("unreachableColor.name"),
+    scope: "world",
+    config: true,
+    type: String,
+    default: "#ff0000"
+  });
+
+  S("dashMultiplier", {
+    name: L("dashMultiplier.name"),
+    hint: L("dashMultiplier.hint"),
     scope: "world",
     config: true,
     type: Number,
@@ -32,46 +91,37 @@ function registerSettings() {
     default: 3
   });
 
-  game.settings.register(MOD_ID, "walkColor", {
-    name: "Color for walk (ring 1)",
-    scope: "world",
+  // --- Features: Smart Routing ---
+  S("smartRouting", {
+    name: L("smartRouting.name"),
+    hint: L("smartRouting.hint"),
+    scope: "client",
     config: true,
-    type: String,
-    default: "#00ff00"
+    type: Boolean,
+    default: true
   });
 
-  game.settings.register(MOD_ID, "dashColor", {
-    name: "Color for dash (ring 2)",
-    scope: "world",
+  S("routingMode", {
+    name: L("routingMode.name"),
+    hint: L("routingMode.hint"),
+    scope: "client",
     config: true,
     type: String,
-    default: "#ffff00"
+    choices: {
+      "always": L("routingMode.choices.always"),
+      "combat": L("routingMode.choices.combat")
+    },
+    default: "combat"
   });
 
-  game.settings.register(MOD_ID, "dashColor2", {
-    name: "Color for dash (ring 3)",
-    scope: "world",
+  // --- Features: Ghost Trail ---
+  S("ghostTrail", {
+    name: L("ghostTrail.name"),
+    hint: L("ghostTrail.hint"),
+    scope: "client",
     config: true,
-    type: String,
-    default: "#FFA500"
-  });
-
-  game.settings.register(MOD_ID, "unreachableColor", {
-    name: "Color for unreachable",
-    scope: "world",
-    config: true,
-    type: String,
-    default: "#ff0000"
-  });
-
-  game.settings.register(MOD_ID, "fallbackSpeed", {
-    name: "Fallback speed (when no token)",
-    hint: "Used when measuring distance with no token ruler (e.g. Measure tool).",
-    scope: "world",
-    config: true,
-    type: Number,
-    range: { min: 0, max: 200, step: 5 },
-    default: 30
+    type: Boolean,
+    default: true
   });
 }
 
@@ -105,7 +155,95 @@ Hooks.once("ready", () => {
     return;
   }
 
+
+  // -------------------------------------------------------------------------
+  // STRATEGY: Wrap PF2e's native findMovementPath
+  // This is how modules like 'wayfinder' integrate.
+  // -------------------------------------------------------------------------
+  try {
+    const tokenClass = CONFIG.Token.objectClass;
+    if (tokenClass && tokenClass.prototype.findMovementPath) {
+      const target = "CONFIG.Token.objectClass.prototype.findMovementPath";
+      console.log(`[DEBUG_SMART] Registering wrapper for ${target}`);
+
+      libWrapper.register(MOD_ID, target, function (wrapped, waypoints, options) {
+
+        const smartEnabled = game.settings.get(MOD_ID, "smartRouting");
+
+        if (!smartEnabled) {
+
+          return wrapped(waypoints, options);
+        }
+
+        if (waypoints.length >= 2) {
+          const start = waypoints[waypoints.length - 2];
+          const end = waypoints[waypoints.length - 1];
+
+
+
+          if (start && end && (start.x !== end.x || start.y !== end.y)) {
+            try {
+              const token = this.document ? this : (this.object ?? this);
+              const tokenObject = token.object || token;
+
+
+              const finder = new SmartFinder(tokenObject);
+              const path = finder.findPath(start, end);
+
+              if (path && path.length > 0) {
+                const template = start || {};
+                // Preserve history (waypoints user already passed)
+                const newWaypoints = waypoints.slice(0, waypoints.length - 1);
+
+                // Construct SAFE waypoints.
+                // We need to copy metadata (for Ruler labels) but avoid circular refs (Stuck Token).
+                for (const p of path) {
+                  const wp = { ...template, x: p.x, y: p.y };
+
+                  // Sanitize internal flags that might break DragHandler
+                  delete wp._original;
+                  delete wp._parent;
+
+                  newWaypoints.push(wp);
+                }
+
+                // [GhostTrail Integration] Store the calculated path so GhostTrail can pick it up
+                // Increasing timeout to 10s to ensure it persists through the drag-drop interaction
+                if (tokenObject) {
+                  tokenObject._lastSmartPath = newWaypoints.map(w => ({ x: w.x, y: w.y }));
+                  setTimeout(() => {
+                    if (tokenObject._lastSmartPath) delete tokenObject._lastSmartPath;
+                  }, 10000);
+                }
+
+                // console.log(`[DEBUG_SMART] Final waypoints:`, newWaypoints);
+
+                // PF2e expects result to be undefined if using a promise
+                return {
+                  result: undefined,
+                  promise: Promise.resolve(newWaypoints),
+                  cancel: () => { }
+                };
+              }
+            } catch (err) {
+              console.error(`${MOD_ID}: SmartRouting Crash:`, err);
+            }
+          }
+        }
+        return wrapped(waypoints, options);
+
+      }, "MIXED");
+
+    } else {
+      console.warn(`${MOD_ID}: findMovementPath not found on Token class. Is this PF2e system?`);
+    }
+  } catch (e) {
+    console.error(`${MOD_ID}: Failed to register findMovementPath wrapper`, e);
+  }
+
+  // -------------------------------------------------------------------------
   // Wrap base Ruler segment styling (Measure tool)
+
   try {
     libWrapper.register(MOD_ID, "foundry.canvas.interaction.Ruler.prototype._getSegmentStyle",
       function (wrapped, waypoint) {
@@ -171,6 +309,9 @@ Hooks.once("ready", () => {
   } catch (e) {
     console.error(`${MOD_ID}: failed to wrap TokenRuler _getGridHighlightStyle`, e);
   }
+
+  // Initialize Ghost Trail
+  new GhostTrail().init();
 
   console.info(`${MOD_ID}: v13 overlay active.`);
 });

@@ -3,22 +3,22 @@
 ![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen)
 ![Pathfinder 2e](https://img.shields.io/badge/System-PF2e-blue)
 ![License](https://img.shields.io/badge/License-MIT-blue)
-![Version](https://img.shields.io/badge/Version-1.1.0-orange)
-
-
-<a href="Updates.md"><img src="https://img.shields.io/badge/CHECK-Changelog-blue" style="height: 25px;"></a>
-<a href="https://www.patreon.com/PhilsModules"><img src="https://img.shields.io/badge/SUPPORT-Patreon-ff424d?logo=patreon" style="height: 25px;"></a>
+![Version](https://img.shields.io/badge/Version-1.2.0-orange)
+[![Changelog](https://img.shields.io/badge/CHECK-Changelog-blueviolet)](Updates.md)
+[![Patreon](https://img.shields.io/badge/Support-Patreon-ff424d?logo=patreon)](https://www.patreon.com/PhilsModules)
 
 **Phil's PF2e Action Colours** brings the Pathfinder 2e **3-Action Economy** visualization to Foundry V13.
 It upgrades the native Token Drag Measurement with clear, color-coded sections showing exactly how many actions a move will cost.
 
-> [!IMPORTANT]
-> **Heavy Inspiration & Credits**
-> This module is heavily inspired by the legendary [Drag Ruler](https://github.com/manuelVo/foundryvtt-drag-ruler) by **manuelVo**.
-> Ideally, think of this as a v13-adapted, lightweight spiritual successor focused on visual feedback using the new Core Ruler API, with bugfixes for the latest PF2e system. All credit for the original concept goes to Manuel!
+> [!NOTE]
+> **Spiritual Successor**
+> This module is a spiritual successor to the legendary [Drag Ruler](https://github.com/manuelVo/foundryvtt-drag-ruler), reimagined for Foundry V13.
+
 
 ## 🚀 Key Features
 
+*   **Smart Routing (New!):** When dragging a token, it automatically calculates the shortest path **around walls** (A* Pathfinding). No more clipping!
+*   **Ghost Trail (New!):** Hover over a token during combat to see the exact path it took this turn.
 *   **3-Action Economy Colors:**
     *   🟢 **Green:** 1 Action (Walk)
     *   🟡 **Yellow:** 2 Actions (Dash)
@@ -56,12 +56,14 @@ It upgrades the native Token Drag Measurement with clear, color-coded sections s
 Es erweitert die native Bewegungsmessung um klare Farbbereiche, die dir sofort zeigen, wie viele Aktionen eine Bewegung kostet.
 
 > [!NOTE]
-> **Credits**
-> Dieses Modul basiert stark auf dem Konzept vom großartigen [Drag Ruler](https://github.com/manuelVo/foundryvtt-drag-ruler) von **manuelVo**.
-> Es ist im Grunde eine für v13 angepasste Version, die die neue Core-API nutzt und Fehler im aktuellen PF2e-System behebt. Ehre wem Ehre gebührt!
+> **Geistiger Nachfolger**
+> Dieses Modul ist ein geistiger Nachfolger des legendären [Drag Ruler](https://github.com/manuelVo/foundryvtt-drag-ruler), neu interpretiert für Foundry V13.
+
 
 ## 🚀 Funktionen
 
+*   **Smart Routing (Neu!):** Tokens laufen beim Ziehen automatisch um Wände herum (A* Pfadfindung). Nie wieder "durch die Wand"!
+*   **Ghost Trail (Neu!):** Fahre im Kampf über ein Token, um genau zu sehen, welchen Weg du in dieser Runde genommen hast.
 *   **3-Aktionen Farben:**
     *   🟢 **Grün:** 1 Aktion
     *   🟡 **Gelb:** 2 Aktionen
@@ -84,7 +86,7 @@ Es erweitert die native Bewegungsmessung um klare Farbbereiche, die dir sofort z
 
 ## 👨‍💻 Author
 * **Phil** (GitHub: [PhilsModules](https://github.com/PhilsModules))
-* **Original Concept:** [ManuelVo](https://github.com/manuelVo)
+
 
 ## 📄 License
 This module is licensed under the [MIT License](LICENSE).
