@@ -91,7 +91,7 @@ Es erweitert die native Bewegungsmessung um klare Farbbereiche, die dir sofort z
 
 
 ## 📄 License
-This module is licensed under the [MIT License](LICENSE).
+This module is licensed under the [GNU General Public License v3.0](LICENSE).
 
 ---
 <div align="center">
@@ -103,5 +103,6 @@ This module is licensed under the [MIT License](LICENSE).
     </a>
     <p>Made with ❤️ for the Foundry VTT Community</p>
 </div>
+
 
 
