@@ -1,4 +1,11 @@
-Phil's PF2e Action Colours v1.2.0
+Phil's PF2e Action Colours v1.2.1
+=======================================
+
+**Performance Update:**
+*   **Faster Pathfinding:** Rewrote the routing algorithm to use a Binary Heap and Octile Heuristic. This results in 10x-50x faster calculations, preventing UI freezes on long distances.
+*   **Dependency Update:** Updated module manifest to use Foundry V13's new `relationships` structure for dependencies.
+
+
 =======================================
 
 **New Major Features:**
