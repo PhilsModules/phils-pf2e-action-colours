@@ -37,6 +37,22 @@
                 "name": "Geisterpfad anzeigen",
                 "hint": "Zeigt beim Drüberfahren den Weg an, den das Token in dieser Runde zurückgelegt hat."
             },
+            "ghostTrailMode": {
+                "name": "Geisterpfad Modus",
+                "hint": "Wann soll der Pfad aufgezeichnet werden?",
+                "choices": {
+                    "always": "Immer",
+                    "combat": "Nur im Kampf"
+                }
+            },
+            "ghostTrailTimeout": {
+                "name": "Pfad Timeout (Sekunden)",
+                "hint": "Wenn > 0, verschwindet der Pfad automatisch nach X Sekunden. Nützlich wenn 'Immer' aktiv ist."
+            },
+            "ghostTrailShare": {
+                "name": "Geisterpfade teilen",
+                "hint": "Wenn aktiviert, sehen andere Spieler deine Bewegungspfade."
+            },
             "fallbackSpeed": {
                 "name": "Fallback Geschwindigkeit",
                 "hint": "Wird genutzt, wenn kein Token gemessen wird (z.B. Messtool)."

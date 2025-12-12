@@ -22,10 +22,7 @@ function registerSettings() {
   // Helper to safely localize
   const L = (key) => {
     const stringId = I(key);
-    const localized = game.i18n.localize(stringId);
-    // Debug check
-    if (localized === stringId) console.warn(`[${MOD_ID}] Missing translation for ${stringId}`);
-    return localized;
+    return game.i18n.localize(stringId);
   };
 
   // --- Core Configuration ---
@@ -122,6 +119,37 @@ function registerSettings() {
     config: true,
     type: Boolean,
     default: true
+  });
+
+  S("ghostTrailMode", {
+    name: L("ghostTrailMode.name"),
+    hint: L("ghostTrailMode.hint"),
+    scope: "client",
+    config: true,
+    type: String,
+    choices: {
+      "always": L("ghostTrailMode.choices.always"),
+      "combat": L("ghostTrailMode.choices.combat")
+    },
+    default: "combat"
+  });
+
+  S("ghostTrailTimeout", {
+    name: L("ghostTrailTimeout.name"),
+    hint: L("ghostTrailTimeout.hint"),
+    scope: "client",
+    config: true,
+    type: Number,
+    range: { min: 0, max: 60, step: 1 },
+    default: 5
+  });
+  S("ghostTrailShare", {
+    name: L("ghostTrailShare.name"),
+    hint: L("ghostTrailShare.hint"),
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: false
   });
 }
 

@@ -37,6 +37,22 @@
                 "name": "Show Ghost Trail",
                 "hint": "Shows the path a token has taken this round when hovering over it."
             },
+            "ghostTrailMode": {
+                "name": "Ghost Trail Mode",
+                "hint": "When should trails be recorded?",
+                "choices": {
+                    "always": "Always",
+                    "combat": "Only in Combat"
+                }
+            },
+            "ghostTrailTimeout": {
+                "name": "Trail Timeout (Seconds)",
+                "hint": "If > 0, the trail clears automatically X seconds after movement stops. Useful if 'Always' is enabled."
+            },
+            "ghostTrailShare": {
+                "name": "Share Ghost Trails",
+                "hint": "If enabled, your movement trails are sent to other players."
+            },
             "fallbackSpeed": {
                 "name": "Fallback Speed",
                 "hint": "Used when measuring distance with no token (e.g. Measure Tool)."

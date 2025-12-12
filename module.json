@@ -2,7 +2,7 @@
     "id": "phils-pf2e-action-colours",
     "title": "Phil's PF2e Action Colours",
     "description": "Visualizes the PF2e 3-Action Economy on the ruler! Adds Green (1A), Yellow (2A), and Orange (3A) colors to Foundry V13's native Drag Measurement.",
-    "version": "1.2.1",
+    "version": "1.3.0",
     "compatibility": {
         "minimum": "13",
         "verified": "13"

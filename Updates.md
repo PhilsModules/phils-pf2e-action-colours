@@ -1,3 +1,14 @@
+Phil's PF2e Action Colours v1.3.0
+=======================================
+
+**Performance & Stability Update:**
+*   **Performance:** Ghost Trail pathfinding is now verified to run at **~3ms** (Heatmap Benchmark).
+*   **Bugfix:** Fixed the "Double Line"/"Zigzag" visual artifacts on the Ghost Trail.
+*   **Bugfix:** Fixed "Closed Loop" artifacts where the trail would snap back to the start position incorrectly.
+*   **Engine:** Improved path smoothing and "Cooldown" logic to reject noise from drag-and-drop operations.
+
+=======================================
+
 Phil's PF2e Action Colours v1.2.1
 =======================================
 
