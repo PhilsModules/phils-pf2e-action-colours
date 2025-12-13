@@ -1,3 +1,11 @@
+Phil's PF2e Action Colours v1.3.1
+=======================================
+
+**Bugfixes:**
+*   **Critical Fix:** Resolved a `ReferenceError: api is not defined` that caused errors when dragging tokens with the Ghost Trail active.
+
+=======================================
+
 Phil's PF2e Action Colours v1.3.0
 =======================================
 

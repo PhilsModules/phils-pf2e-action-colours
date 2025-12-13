@@ -363,7 +363,7 @@ export class GhostTrail {
         if (token._ghostTrailBlocking) return;
 
         // Check 2: Centralized Set (if api available)
-        if (api && api.activeRulerMoves.has(token.id)) return;
+        if (this.activeRulerMoves.has(token.id)) return;
 
         // COOLDOWN CHECK (Global for this token)
         const state = this._getState(token.id);
