@@ -203,18 +203,27 @@ export class GhostTrail {
             // Use CAPTURED waypoints
             if (capturedWaypoints.length > 1) {
                 for (const token of movingTokens) {
-                    // ALWAYS calculate the Smart Path if possible.
-                    // This ensures we show the "Walked" path (Grid/A*) rather than the "Ruler" path (Straight Lines).
-                    // This fixes the "Luftlinie" issue where users expected to see their token's steps.
-                    const smartPath = api._getSmartPathFromWaypoints(capturedWaypoints, token);
 
-                    if (smartPath && smartPath.length > 0) {
-                        // OVERWRITE existing history (clears any "Straight Line" fallback added by _onPreUpdateToken)
-                        // OVERWRITE existing history (clears any "Straight Line" fallback added by _onPreUpdateToken)
-                        api._addToHistory(token, smartPath, true);
-                    } else {
-                        // Fallback: Use captured straight lines if Smart Finder fails
-                        api._addToHistory(token, capturedWaypoints, true);
+                    // [GhostTrail Integration] Prefer PRE-CALCULATED SMART PATH (from main.js wrapper)
+                    // This ensures we match the grid highlights exactly, even if Ruler segments were simplified.
+                    if (token._lastSmartPath && token._lastSmartPath.length > 0) {
+                        api._addToHistory(token, token._lastSmartPath, true);
+                        // Clear it to prevent reuse
+                        delete token._lastSmartPath;
+                    }
+                    else {
+                        // Fallback: ALWAYS calculate the Smart Path if possible.
+                        // This ensures we show the "Walked" path (Grid/A*) rather than the "Ruler" path (Straight Lines).
+                        // This fixes the "Luftlinie" issue where users expected to see their token's steps.
+                        const smartPath = api._getSmartPathFromWaypoints(capturedWaypoints, token);
+
+                        if (smartPath && smartPath.length > 0) {
+                            // OVERWRITE existing history (clears any "Straight Line" fallback added by _onPreUpdateToken)
+                            api._addToHistory(token, smartPath, true);
+                        } else {
+                            // Fallback: Use captured straight lines if Smart Finder fails
+                            api._addToHistory(token, capturedWaypoints, true);
+                        }
                     }
 
                     // FORCE DRAW: Since we blocked _onPreUpdateToken, the history logic was skipped during animation.
@@ -597,24 +606,28 @@ export class GhostTrail {
         if (history.length > 0) {
             let prev = getCenter(history[0].x, history[0].y);
 
+            // [GhostTrail Refactor] Restore Color Segments (User Request)
+            // We draw each segment individually to apply the correct distance-based color.
+            // But we DO NOT draw the dots (circles) to keep it clean.
+
             for (let i = 1; i < history.length; i++) {
                 const p = history[i];
                 const curr = getCenter(p.x, p.y);
 
-                // Calculate segment distance in game units (ft)
-                const measurement = canvas.grid.measurePath([
-                    { x: history[i - 1].x, y: history[i - 1].y },
-                    { x: p.x, y: p.y }
-                ]);
-                const gridDist = measurement.distance;
-                cumulativeDist += gridDist;
+                // [GhostTrail Fix] Use Cumulative Measurement
+                // Instead of summing segments (which breaks 5-10-5 diagonal rules),
+                // we measure the Full Path from Start to Here.
+                // This ensures we match the Ruler's distance calculation exactly.
+                const pathSoFar = history.slice(0, i + 1);
+                const measurement = canvas.grid.measurePath(pathSoFar);
+                const currentDist = measurement.distance;
 
-                const colorHex = this._pickColor(cumulativeDist, speed);
+                const colorHex = this._pickColor(currentDist, speed);
                 const color = parseInt(colorHex.replace("#", ""), 16);
 
                 const alpha1 = history[i - 1].alpha ?? 1.0;
                 const alpha2 = p.alpha ?? 1.0;
-                const segAlpha = Math.min(alpha1, alpha2) * 0.4;
+                const segAlpha = Math.min(alpha1, alpha2) * 0.6;
 
                 if (segAlpha > 0.01) {
                     g.lineStyle(4, color, segAlpha);
@@ -624,68 +637,34 @@ export class GhostTrail {
                 prev = curr;
             }
 
-            const current = getCenter(token.x, token.y);
+            // Draw current token connection if needed
             const lastP = history[history.length - 1];
             if (lastP) {
-                // Distance to current
-                const measurement = canvas.grid.measurePath([
-                    { x: lastP.x, y: lastP.y },
-                    { x: token.x, y: token.y }
-                ]);
-                const finalDist = cumulativeDist + measurement.distance; // Speculative distance for the last segment
+                const curr = getCenter(token.x, token.y);
+
+                // Measure final segment including token pos
+                const fullPath = [...history, { x: token.x, y: token.y }];
+                const measurement = canvas.grid.measurePath(fullPath);
+                const finalDist = measurement.distance;
 
                 const colorHex = this._pickColor(finalDist, speed);
                 const color = parseInt(colorHex.replace("#", ""), 16);
 
-                const lastAlpha = lastP.alpha ?? 1.0;
-                const segAlpha = lastAlpha * 0.4;
-                if (segAlpha > 0.01) {
-                    g.lineStyle(4, color, segAlpha);
-                    g.moveTo(prev.x, prev.y);
-                    g.lineTo(current.x, current.y);
-                }
+                g.lineStyle(4, color, 0.6);
+                g.moveTo(prev.x, prev.y);
+                g.lineTo(curr.x, curr.y);
             }
+            // End Line
 
-            g.lineStyle(0);
-
+            // Remove the Dot Drawing Logic entirely
+            /*
             // Re-calculate dist for dots to match lines
             let dotDist = 0;
-            if (history.length > 0) {
-                // First dot at 0
-                const c = getCenter(history[0].x, history[0].y);
-                const cHex = this._pickColor(0, speed);
-                g.beginFill(parseInt(cHex.replace("#", ""), 16), (history[0].alpha ?? 1) * 0.4);
-                g.drawCircle(c.x, c.y, 3);
-                g.endFill();
-            }
-
-            for (let i = 1; i < history.length; i++) {
-                const p = history[i];
-                const m = canvas.grid.measurePath([
-                    { x: history[i - 1].x, y: history[i - 1].y },
-                    { x: p.x, y: p.y }
-                ]);
-                dotDist += m.distance;
-
-                const pAlpha = p.alpha ?? 1.0;
-                if (pAlpha > 0.01) {
-                    const c = getCenter(p.x, p.y);
-                    const cHex = this._pickColor(dotDist, speed);
-                    g.beginFill(parseInt(cHex.replace("#", ""), 16), pAlpha * 0.4);
-                    g.drawCircle(c.x, c.y, 3);
-                    g.endFill();
-                }
-            }
-            // Dot at current
-            const m = canvas.grid.measurePath([
-                { x: lastP.x, y: lastP.y },
-                { x: token.x, y: token.y }
-            ]);
-            const cHex = this._pickColor(cumulativeDist + m.distance, speed);
-            g.beginFill(parseInt(cHex.replace("#", ""), 16), 0.4);
-            g.drawCircle(current.x, current.y, 3);
-            g.endFill();
+            if (history.length > 0) { ... }
+            */
         }
+
+
     }
 
     _getActorSpeed(token) {

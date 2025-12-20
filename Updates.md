@@ -1,3 +1,14 @@
+Phil's PF2e Action Colours v1.3.2
+=======================================
+
+**Ghost Trail Visuals & Accuracy Refinement:**
+*   **No More Dots:** The Ghost Trail is now a clean, continuous line without cluttering dots on every grid square.
+*   **Perfect Color Sync:** Reworked the path distance calculation to match the grid precisely. The line segments (Green/Yellow/Orange) now transition exactly at the grid borders, consistent with PF2e's 5-10-5 diagonal movement rules.
+*   **Steppy Alignment:** To ensure this perfect color/distance accuracy, the trail now follows the "Zig-Zag" (or Steppy) center-to-center path of the grid squares. This elimination of valid but "straight-cut" lines ensures that the visual representation matches the mathematical cost 1:1.
+*   **Failsafe:** Added robust error handling to the Smart Finding algorithm to prevent regressions to "Straight Lines" when pathfinding encounters edge cases.
+
+=======================================
+
 Phil's PF2e Action Colours v1.3.1
 =======================================
 
