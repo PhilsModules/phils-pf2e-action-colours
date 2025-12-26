@@ -66,10 +66,15 @@ export class SmartFinder {
     }
 
     findPath(start, end) {
-        // Convert pixels to grid coordinates
-        const half = (this.grid.size || 100) / 2;
-        const sPos = this._getGridPosFromPixels(start.x + half, start.y + half);
-        const ePos = this._getGridPosFromPixels(end.x + half, end.y + half);
+        // Use token dimensions if available, otherwise fallback to grid size
+        const tW = this.token?.w ?? (this.grid.size || 100);
+        const tH = this.token?.h ?? (this.grid.size || 100);
+
+        // Convert pixels to grid coordinates using TOKEN CENTER
+        // This ensures that even if a small token is in a corner of a cell, 
+        // we correctly identify which cell it occupies.
+        const sPos = this._getGridPosFromPixels(start.x + (tW / 2), start.y + (tH / 2));
+        const ePos = this._getGridPosFromPixels(end.x + (tW / 2), end.y + (tH / 2));
 
         // Use packed integers for keys only if coordinates fit in 16 bits (standard for maps < 65k size)
         // Key format: (x << 16) | y.  Note: JavaScript bitwise ops are 32-bit signed.
@@ -135,7 +140,7 @@ export class SmartFinder {
 
             // Check if we reached the goal (or strict adjacency? standard A* goes to goal)
             if (current.key === endKey) {
-                return this.reconstructPath(nodeData, current.key, start);
+                return this.reconstructPath(nodeData, current.key, start, end);
             }
 
             // If we found a shorter path to this node already in a future iteration (lazy deletion), skip
@@ -186,25 +191,42 @@ export class SmartFinder {
         return null;
     }
 
-    reconstructPath(nodeData, currentKey, startPixel) {
+    reconstructPath(nodeData, currentKey, startPixel, endPixel) {
         const path = [];
         let curr = currentKey;
+        const goalKey = currentKey; // The key we started reconstruction from is the Goal
+
+        // Calculate centering offset
+        const tW = this.token?.w ?? (this.grid.size || 100);
+        const tH = this.token?.h ?? (this.grid.size || 100);
+        const gridSize = (this.grid.size || 100); // Standardize grid size access
+
+        // Offset to center the token in the cell
+        const offsetX = (gridSize - tW) / 2;
+        const offsetY = (gridSize - tH) / 2;
 
         while (curr) {
-            // Parse key back to coords (slower, but only done once per path)
-            const [i, j] = curr.split(',').map(Number);
-
-            // We return TopLeft for token placement, matching original logic
-            path.push(this._getTopLeft(i, j));
-
             const data = nodeData.get(curr);
+            let pt;
+
+            if (curr === goalKey) {
+                // Goal Node: Snap to exact End Pixel (User's drag position)
+                pt = { x: endPixel.x, y: endPixel.y };
+            } else if (!data.parent) {
+                // Start Node (Parent is null): Snap to exact Start Pixel (User's origin)
+                pt = { x: startPixel.x, y: startPixel.y };
+            } else {
+                // Intermediate Node: Center in grid cell
+                const [i, j] = curr.split(',').map(Number);
+                const cellTL = this._getTopLeft(i, j);
+                pt = { x: cellTL.x + offsetX, y: cellTL.y + offsetY };
+            }
+
+            path.push(pt);
             curr = data ? data.parent : null;
         }
 
-        // Path includes start node, which we usually want to replace with exact start pixel or omit
-        // Original code included it.
-
-        // Reverse to get Start -> End
+        // Return Start -> End
         return path.reverse();
     }
 }

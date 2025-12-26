@@ -1,3 +1,12 @@
+Phil's PF2e Action Colours v1.3.3
+=======================================
+
+**Fixes:**
+*   **Pathfinding (Small Tokens):** Resolved issue where small tokens would "zig-zag" or be forced to the center of grid cells. Movement now respects exact start/end positions while smoothing intermediate steps.
+*   **Deprecation Warning:** Fixed `system.attributes.speed` deprecation warning by updating migration logic to catch all variant settings.
+
+=======================================
+
 Phil's PF2e Action Colours v1.3.2
 =======================================
 

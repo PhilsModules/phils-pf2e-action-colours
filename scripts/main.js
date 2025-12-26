@@ -165,7 +165,7 @@ Hooks.once("ready", () => {
 
   // Migration: If user has old default, update it
   const currentSpeedAttr = game.settings.get(MOD_ID, "speedAttribute");
-  if (currentSpeedAttr === "system.attributes.speed.total" || currentSpeedAttr === "system.attributes.speed") {
+  if (currentSpeedAttr && currentSpeedAttr.startsWith("system.attributes.speed")) {
     console.log(`${MOD_ID}: Migrating deprecated speed attribute to system.movement.speeds.land`);
     game.settings.set(MOD_ID, "speedAttribute", "system.movement.speeds.land");
   }
