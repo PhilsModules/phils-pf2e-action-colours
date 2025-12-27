@@ -21,7 +21,7 @@ It upgrades the native Token Drag Measurement with clear, color-coded sections s
 
 *   **Smart Routing:** When dragging a token, it automatically calculates the shortest path **around walls** (A* Pathfinding). No more clipping!
 *   **Speed:** Highly optimized Pathfinding (Binary Heap + Octile Heuristic). Calculates routes 10x-50x faster.
-*   **Teleport Mode:** Hold **Alt** to ignore walls. Drop to teleport instantly (skipping animation).
+*   **Teleport Mode:** Hold **Alt** to ignore walls (with Unconstrained Movement enabled). Drop to teleport instantly (skipping animation).
 *   **Ghost Trail:** Hover over a token during combat to see the exact path it took this turn.
 *   **3-Action Economy Colors:**
     *   🟢 **Green:** 1 Action (Walk)
@@ -74,7 +74,7 @@ Es erweitert die native Bewegungsmessung um klare Farbbereiche, die dir sofort z
 
 *   **Smart Routing:** Tokens laufen beim Ziehen automatisch um Wände herum (A* Pfadfindung). Nie wieder "durch die Wand"!
 *   **Ghost Trail:** Fahre im Kampf über ein Token, um genau zu sehen, welchen Weg du in dieser Runde genommen hast.
-*   **Teleport Modus:** Halte **Alt** gedrückt, um Wände zu ignorieren. Beim Loslassen teleportiert der Token sofort (keine Laufanimation).
+*   **Teleport Modus:** Halte **Alt** gedrückt, um Wände zu ignorieren wenn Dm Movement an ist. Beim Loslassen teleportiert der Token sofort (keine Laufanimation).
 *   **3-Aktionen Farben:**
     *   🟢 **Grün:** 1 Aktion
     *   🟡 **Gelb:** 2 Aktionen
@@ -112,5 +112,6 @@ This module is licensed under the [GNU General Public License v3.0](LICENSE).
     </a>
     <p>Made with ❤️ for the Foundry VTT Community</p>
 </div>
+
 
 
