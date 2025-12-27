@@ -197,6 +197,35 @@ Hooks.once("ready", () => {
       libWrapper.register(MOD_ID, target, function (wrapped, waypoints, options) {
 
 
+        // [Shift-Teleport] Bypass Smart Routing & PF2e Routing if Shift is held
+        // Return the direct waypoints as the path.
+        // v13: game.keyboard.isDown is removed. Use downKeys set.
+        const keys = game.keyboard.downKeys;
+        const isMod = keys && (keys.has("AltLeft") || keys.has("AltRight"));
+
+        if (isMod) {
+          // [GhostTrail Fix] still need to ensure lastSmartPath is set for straight lines?
+          // The code block below handles that for "this" token.
+          // Let's copy that small logic or just rely on the fact that straight lines are standard.
+          // Actually, standard ghost trail often listens to Ruler.
+          try {
+            const token = this.document ? this : (this.object ?? this);
+            const tokenObject = token.object || token;
+            if (tokenObject) {
+              tokenObject._lastSmartPath = waypoints.map(w => ({ x: w.x, y: w.y }));
+              setTimeout(() => {
+                if (tokenObject._lastSmartPath) delete tokenObject._lastSmartPath;
+              }, 10000);
+            }
+          } catch (e) { }
+
+          return {
+            result: undefined,
+            promise: Promise.resolve(waypoints),
+            cancel: () => { }
+          };
+        }
+
         // [GhostTrail Fix] ALWAYS Try to capture waypoints for the Ghost Trail,
         // even if Smart Routing is disabled. This ensures "Straight Line" moves 
         // with waypoints (set via 'f') are recorded correctly.
@@ -308,6 +337,48 @@ Hooks.once("ready", () => {
   }
 
   // -------------------------------------------------------------------------
+  // WRAPPER: Shift-Teleport Drop Logic (Instant Move)
+  // -------------------------------------------------------------------------
+  try {
+    const target = "CONFIG.Token.objectClass.prototype._onDragLeftDrop";
+    libWrapper.register(MOD_ID, target, function (wrapped, event) {
+      // Debug: Log everything
+      console.log(`${MOD_ID}: _onDragLeftDrop called`);
+      const keys = game.keyboard.downKeys;
+      const hasAlt = (event && event.altKey) || (keys && (keys.has("AltLeft") || keys.has("AltRight")));
+      console.log(`${MOD_ID}: Key Check | EventAlt: ${event?.altKey} | KeysHasAlt: ${keys && (keys.has("AltLeft") || keys.has("AltRight"))}`);
+
+      if (hasAlt) {
+        console.log(`${MOD_ID}: Alt detected. Registering Hook.`);
+        const myUuid = this.document.uuid;
+
+        // Force animation: false for the upcoming update
+        const hookId = Hooks.once("preUpdateToken", (doc, changes, options, userId) => {
+          console.log(`${MOD_ID}: preUpdateToken Fired! UpdateUUID: ${doc.uuid} | MyUUID: ${myUuid}`);
+          if (doc.uuid === myUuid) {
+            console.log(`${MOD_ID}: UUID Match! Applying Teleport options.`);
+            // V13: Force duration 0 to skip logic
+            options.animation = { duration: 0 };
+            options.teleport = true;
+          } else {
+            console.log(`${MOD_ID}: UUID Mismatch.`);
+          }
+        });
+
+        // Safety cleanup if update doesn't happen
+        setTimeout(() => {
+          Hooks.off("preUpdateToken", hookId);
+          console.log(`${MOD_ID}: Hook timeout cleanup.`);
+        }, 1000);
+      }
+      return wrapped(event);
+    }, "WRAPPER");
+  } catch (e) {
+    console.error(`${MOD_ID}: Failed to wrap _onDragLeftDrop`, e);
+  }
+
+
+  // -------------------------------------------------------------------------
   // Wrap base Ruler segment styling (Measure tool)
 
   try {
@@ -322,6 +393,15 @@ Hooks.once("ready", () => {
           if (color) {
             style.color = color;
             style.alpha = 1.0;
+          }
+
+          // Check for Teleport Mode (Alt)
+          const keys = game.keyboard.downKeys;
+          const isAlt = keys && (keys.has("AltLeft") || keys.has("AltRight"));
+          if (isAlt) {
+            // Hide the line for cleaner visual (Ghost Trail deals with history)
+            style.alpha = 0.0;
+            style.visible = false;
           }
         } catch (e) {
           console.error(`${MOD_ID}: error in base Ruler _getSegmentStyle`, e);
@@ -424,9 +504,30 @@ Hooks.once("ready", () => {
   // Initialize Ghost Trail
   new GhostTrail().init();
 
+  // -------------------------------------------------------------------------
+  // GLOBAL HOOK: Teleport logic (Keyboard & Mouse)
+  // -------------------------------------------------------------------------
+  Hooks.on("preUpdateToken", (tokenDoc, changes, options, userId) => {
+    // Debug: Log entry
+    // console.log(`${MOD_ID}: Global Hook Fired!`, changes);
+    // Only care if x or y is changing (movement)
+    if (!changes.x && !changes.y) return;
+
+    // Check for Alt Key
+    const keys = game.keyboard.downKeys;
+    const isAlt = keys && (keys.has("AltLeft") || keys.has("AltRight"));
+
+    if (isAlt) {
+      // console.log(`${MOD_ID}: Alt-Move detected. Options BEFORE:`, options);
+
+      // "Option Bomb" to force teleport in V13 / PF2e
+      options.animation = { duration: 0 };
+      options.animate = false; // Legacy/Alternative
+      options.teleport = true; // PF2e specific
+    }
+  });
   console.info(`${MOD_ID}: v13 overlay active.`);
 });
-
 /** Return actor speed in scene units for this ruler. */
 function getSpeedForRuler(ruler) {
   // Prefer token ruler's actor
@@ -459,6 +560,14 @@ function pickColor(distance, baseSpeed) {
   if (walk <= 0) return unreachableColor;
 
   const eps = 1e-6;
+
+  // [Shift-Teleport] Logic moved to _getSegmentStyle to hide line
+  // const keys = game.keyboard.downKeys;
+  // const isMod = keys && (keys.has("AltLeft") || keys.has("AltRight"));
+  // if (isMod) {
+  //   return walkColor;
+  // }
+
   if (distance <= walk + eps) return walkColor;
   if (m >= 2 && distance <= (walk * 2) + eps) return dashColor;
   if (m >= 3 && distance <= (walk * 3) + eps) return dashColor2;

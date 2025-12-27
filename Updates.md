@@ -1,3 +1,13 @@
+Phil's PF2e Action Colours v1.4.0
+=======================================
+
+**New Feature: Teleport Mode!**
+*   **Alt-Teleport:** Hold the **Alt** key (Left or Right) while dragging a token to bypass Pathfinder.
+    *   The path will draw a straight line through walls and obstacles.
+    *   Dropping the token while holding **Alt** will teleport it instantly (skipping walk animation).
+
+=======================================
+
 Phil's PF2e Action Colours v1.3.3
 =======================================
 
