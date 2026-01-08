@@ -3,7 +3,7 @@
 # Phil's PF2e Action Colours 🚥
 
 ![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen?style=flat-square) ![Foundry v12 Compatible](https://img.shields.io/badge/Foundry-v12-green?style=flat-square) ![License](https://img.shields.io/badge/License-GPLv3_%2F_CC_BY--NC--ND-blue?style=flat-square)
-[![Version](https://img.shields.io/badge/Version-1.4.1-orange?style=flat-square)](https://github.com/PhilsModules/phils-pf2e-action-colours/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
+[![Version](https://img.shields.io/badge/Version-1.5.0-orange?style=flat-square)](https://github.com/PhilsModules/phils-pf2e-action-colours/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
 
 <br>
 
@@ -40,16 +40,17 @@ It upgrades the native Token Drag Measurement with clear, color-coded sections s
 
 ## 🚀 Key Features
 
-- **Smart Routing (New!):** When dragging a token, it automatically calculates the shortest path **around walls** (A\* Pathfinding). No more clipping!
-- **Speed (New!):** Highly optimized Pathfinding (Binary Heap + Octile Heuristic). Calculates routes 10x-50x faster.
-- **Teleport Mode (New!):** Hold **Alt** to ignore walls. Drop to teleport instantly (skipping animation).
-- **Ghost Trail (New!):** Hover over a token during combat to see the exact path it took this turn.
+- **Smart Routing:** When dragging a token, it automatically calculates the shortest path **around walls** (A\* Pathfinding). No more clipping!
+- **Speed:** Highly optimized Pathfinding (Binary Heap + Octile Heuristic). Calculates routes 10x-50x faster.
+- **Teleport Mode:** Hold **Alt** to ignore walls. Drop to teleport instantly (skipping animation). (GM Only if GM Movement is active)
+- **Ghost Trail:** Hover over a token during combat to see the exact path it took this turn.
 - **3-Action Economy Colors:**
   - 🟢 **Green:** 1 Action (Walk)
   - 🟡 **Yellow:** 2 Actions (Dash)
   - 🟠 **Orange:** 3 Actions (Double Dash)
   - 🔴 **Red:** Unreachable
 - **PF2e Native:** Automatically reads your character's speed from `system.movement.speeds`, handling all system modifiers correctly.
+- **Multiple Speeds:** Supports Fly, Swim, Burrow, and Climb! Right-click while dragging to switch movement types.
 - **v13 Optimized:** An ultralight overlay for Foundry v13's core measurement. No conflicts, native performance.
 
 ## 🤓 Technical Details: Pathfinding
@@ -73,7 +74,9 @@ The module uses a custom implementation of the **A\* (A-Star) Algorithm** to cal
 
 1.  **Configure:** Go to **Settings -> Phil's PF2e Action Colours**.
     - Set **Dash Multiplier** to `3` to enable the full 3-action economy view.
-2.  **Move:** Drag your token. The ruler will instantly show:
+2.  **Move:** Drag your token.
+    - **Alternate Speed:** Right-click on the token to open the **Movement Action Control** and switch to Fly/Swim/Burrow speed.
+3.  The ruler will instantly show:
     - **Green** for your first action.
     - **Yellow** when you dip into your second action.
     - **Orange** when you use your third action.
@@ -92,15 +95,16 @@ Es erweitert die native Bewegungsmessung um klare Farbbereiche, die dir sofort z
 
 ## 🚀 Funktionen
 
-- **Smart Routing (Neu!):** Tokens laufen beim Ziehen automatisch um Wände herum (A\* Pfadfindung). Nie wieder "durch die Wand"!
-- **Teleport Modus (Neu!):** Halte **Alt** gedrückt, um Wände zu ignorieren. Beim Loslassen teleportiert der Token sofort (keine Laufanimation).
-- **Ghost Trail (Neu!):** Fahre im Kampf über ein Token, um genau zu sehen, welchen Weg du in dieser Runde genommen hast.
+- **Smart Routing:** Tokens laufen beim Ziehen automatisch um Wände herum (A\* Pfadfindung). Nie wieder "durch die Wand"!
+- **Teleport Modus:** Halte **Alt** gedrückt, um Wände zu ignorieren. Beim Loslassen teleportiert der Token sofort (keine Laufanimation). (Nur GM, wenn GM Movement aktiv ist)
+- **Ghost Trail:** Fahre im Kampf über ein Token, um genau zu sehen, welchen Weg du in dieser Runde genommen hast.
 - **3-Aktionen Farben:**
   - 🟢 **Grün:** 1 Aktion
   - 🟡 **Gelb:** 2 Aktionen
   - 🟠 **Orange:** 3 Aktionen
   - 🔴 **Rot:** Unerreichbar
 - **PF2e Integriert:** Liest automatisch die Geschwindigkeit aus (`system.movement.speeds`), inklusive aller Boni/Mali.
+- **Mehrere Geschwindigkeiten:** Unterstützt Fliegen, Schwimmen, Graben und Klettern! Rechtsklick beim Ziehen um den Bewegungstyp zu ändern.
 - **v13 Optimiert:** Ein leichtgewichtiges Overlay für den Foundry v13 Core.
 
 ## 🤓 Technische Details: Pfadfindung
@@ -124,7 +128,9 @@ Das Modul nutzt eine eigene Implementierung des **A\* (A-Star) Algorithmus** um 
 
 1.  **Konfiguration:** Gehe zu **Einstellungen -> Phil's PF2e Action Colours**.
     - Stelle den **Dash Multiplier** auf `3`, um die volle 3-Aktionen-Ansicht zu aktivieren.
-2.  **Bewegen:** Ziehe deinen Token. Das Lineal zeigt sofort:
+2.  **Bewegen:** Ziehe deinen Token.
+    - **Alternative Geschwindigkeit:** Rechtsklick auf den Token um die **Movement Action Control** zu öffnen und auf Fliegen/Schwimmen etc. zu wechseln.
+3.  Das Lineal zeigt sofort:
     - **Grün** für deine erste Aktion.
     - **Gelb** wenn du die zweite Aktion anbrichst.
     - **Orange** wenn du die dritte Aktion nutzt.
