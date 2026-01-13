@@ -3,7 +3,7 @@
 # Phil's PF2e Action Colours 🚥
 
 ![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen?style=flat-square) ![Foundry v12 Compatible](https://img.shields.io/badge/Foundry-v12-green?style=flat-square) ![License](https://img.shields.io/badge/License-GPLv3_%2F_CC_BY--NC--ND-blue?style=flat-square)
-[![Version](https://img.shields.io/badge/Version-1.5.0-orange?style=flat-square)](https://github.com/PhilsModules/phils-pf2e-action-colours/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
+[![Version](https://img.shields.io/badge/Version-1.6.0-orange?style=flat-square)](https://github.com/PhilsModules/phils-pf2e-action-colours/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
 
 <br>
 
@@ -41,6 +41,7 @@ It upgrades the native Token Drag Measurement with clear, color-coded sections s
 ## 🚀 Key Features
 
 - **Smart Routing:** When dragging a token, it automatically calculates the shortest path **around walls** (A\* Pathfinding). No more clipping!
+  - _Note: Automatically disabled on **Gridless** maps to ensure smooth straight-line movement._
 - **Speed:** Highly optimized Pathfinding (Binary Heap + Octile Heuristic). Calculates routes 10x-50x faster.
 - **Teleport Mode:** Hold **Alt** to ignore walls. Drop to teleport instantly (skipping animation). (GM Only if GM Movement is active)
 - **Ghost Trail:** Hover over a token during combat to see the exact path it took this turn.
@@ -96,6 +97,7 @@ Es erweitert die native Bewegungsmessung um klare Farbbereiche, die dir sofort z
 ## 🚀 Funktionen
 
 - **Smart Routing:** Tokens laufen beim Ziehen automatisch um Wände herum (A\* Pfadfindung). Nie wieder "durch die Wand"!
+  - _Hinweis: Wird auf Karten ohne Raster (**Gridless**) automatisch deaktiviert, um freie Bewegung zu ermöglichen._
 - **Teleport Modus:** Halte **Alt** gedrückt, um Wände zu ignorieren. Beim Loslassen teleportiert der Token sofort (keine Laufanimation). (Nur GM, wenn GM Movement aktiv ist)
 - **Ghost Trail:** Fahre im Kampf über ein Token, um genau zu sehen, welchen Weg du in dieser Runde genommen hast.
 - **3-Aktionen Farben:**
