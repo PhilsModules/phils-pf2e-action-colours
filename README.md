@@ -51,7 +51,7 @@ It upgrades the native Token Drag Measurement with clear, color-coded sections s
   - 🟠 **Orange:** 3 Actions (Double Dash)
   - 🔴 **Red:** Unreachable
 - **PF2e Native:** Automatically reads your character's speed from `system.movement.speeds`, handling all system modifiers correctly.
-- **Multiple Speeds:** Supports Fly, Swim, Burrow, and Climb! Right-click while dragging to switch movement types.
+- **Multiple Speeds:** Supports Fly, Swim, Burrow, and Climb! Right-click on Token to switch movement types.
 - **v13 Optimized:** An ultralight overlay for Foundry v13's core measurement. No conflicts, native performance.
 
 ## 🤓 Technical Details: Pathfinding
@@ -106,7 +106,7 @@ Es erweitert die native Bewegungsmessung um klare Farbbereiche, die dir sofort z
   - 🟠 **Orange:** 3 Aktionen
   - 🔴 **Rot:** Unerreichbar
 - **PF2e Integriert:** Liest automatisch die Geschwindigkeit aus (`system.movement.speeds`), inklusive aller Boni/Mali.
-- **Mehrere Geschwindigkeiten:** Unterstützt Fliegen, Schwimmen, Graben und Klettern! Rechtsklick beim Ziehen um den Bewegungstyp zu ändern.
+- **Mehrere Geschwindigkeiten:** Unterstützt Fliegen, Schwimmen, Graben und Klettern! Rechtsklick auf den TOken um den Bewegungstyp zu ändern.
 - **v13 Optimiert:** Ein leichtgewichtiges Overlay für den Foundry v13 Core.
 
 ## 🤓 Technische Details: Pfadfindung
@@ -163,3 +163,4 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
+
