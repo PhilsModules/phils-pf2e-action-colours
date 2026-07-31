@@ -2,8 +2,8 @@
 
 # Phil's PF2e Action Colours 🚥
 
-![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen?style=flat-square) ![Foundry v12 Compatible](https://img.shields.io/badge/Foundry-v12-green?style=flat-square) ![License](https://img.shields.io/badge/License-GPLv3_%2F_CC_BY--NC--ND-blue?style=flat-square)
-[![Version](https://img.shields.io/badge/Version-1.6.2-orange?style=flat-square)](https://github.com/PhilsModules/phils-pf2e-action-colours/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
+![Foundry v14 Compatible](https://img.shields.io/badge/Foundry-v14-brightgreen?style=flat-square) ![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-green?style=flat-square) ![Foundry v12 Compatible](https://img.shields.io/badge/Foundry-v12-green?style=flat-square) ![License](https://img.shields.io/badge/License-GPLv3_%2F_CC_BY--NC--ND-blue?style=flat-square)
+[![Version](https://img.shields.io/badge/Version-1.6.3-orange?style=flat-square)](https://github.com/PhilsModules/phils-pf2e-action-colours/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
 
 <br>
 
@@ -37,7 +37,6 @@ _Phil's PF2e Action Colours visualisiert die 3-Aktionen-Ökonomie von Pathfinder
 > Sollten die Module wegen der Nutzung von künstlicher Intelligenz oder veränderter Richtlinien irgendwann aus dem offiziellen Verzeichnis von Foundry gelöscht werden, müsst ihr euch keine Sorgen machen. Das Projekt stirbt nicht! Ihr findet alle Updates, neue Versionen und Unterstützung bei Problemen weiterhin direkt hier auf GitHub.
 > 
 > Vielen Dank für euer Verständnis und eure Unterstützung!
-
 
 <br>
 
@@ -73,8 +72,8 @@ It upgrades the native Token Drag Measurement with clear, color-coded sections s
   - 🟠 **Orange:** 3 Actions (Double Dash)
   - 🔴 **Red:** Unreachable
 - **PF2e Native:** Automatically reads your character's speed from `system.movement.speeds`, handling all system modifiers correctly.
-- **Multiple Speeds:** Supports Fly, Swim, Burrow, and Climb! Right-click on Token to switch movement types.
-- **v13 Optimized:** An ultralight overlay for Foundry v13's core measurement. No conflicts, native performance.
+- **Multiple Speeds:** Supports Fly, Swim, Burrow, and Climb! Right-click while dragging to switch movement types.
+- **Foundry V13 & V14 Optimized:** An ultralight overlay for Foundry's core measurement. No conflicts, native performance.
 
 ## 🤓 Technical Details: Pathfinding
 
@@ -128,7 +127,7 @@ Es erweitert die native Bewegungsmessung um klare Farbbereiche, die dir sofort z
   - 🟠 **Orange:** 3 Aktionen
   - 🔴 **Rot:** Unerreichbar
 - **PF2e Integriert:** Liest automatisch die Geschwindigkeit aus (`system.movement.speeds`), inklusive aller Boni/Mali.
-- **Mehrere Geschwindigkeiten:** Unterstützt Fliegen, Schwimmen, Graben und Klettern! Rechtsklick auf den TOken um den Bewegungstyp zu ändern.
+- **Mehrere Geschwindigkeiten:** Unterstützt Fliegen, Schwimmen, Graben und Klettern! Rechtsklick beim Ziehen um den Bewegungstyp zu ändern.
 - **v13 Optimiert:** Ein leichtgewichtiges Overlay für den Foundry v13 Core.
 
 ## 🤓 Technische Details: Pfadfindung
@@ -185,4 +184,3 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
-

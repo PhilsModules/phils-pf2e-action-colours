@@ -1,3 +1,17 @@
+# Phil's PF2e Action Colours v1.6.3
+
+**Foundry V14 Support & Ghost Trail Fixes:**
+
+- **Foundry V14 Compatibility:** Fully verified and updated for Foundry V14 rendering and canvas updates.
+- **Ghost Trail Pathing Fix:** Fixed an issue where the Ghost Trail would draw an incorrect diagonal shortcut line across the map. The trail now perfectly follows the exact path walked by the token.
+- **Performance Optimizations:**
+  - Removed redundant intermediate points on straight movement lines to prevent GPU buffer warnings during drag and drop.
+  - Optimized movement arrival tracking to prevent duplicate background polling loops.
+  - Debounced trail redrawing for smoother performance.
+- **Improved Wall Collision Check:** Standardized wall collision detection across all components to ensure reliable pathing across Foundry V12, V13, and V14.
+
+=======================================
+
 # Phil's PF2e Action Colours v1.6.2
 
 **Ghost Trail Visual Overhaul (Zig-Zag Fix):**
