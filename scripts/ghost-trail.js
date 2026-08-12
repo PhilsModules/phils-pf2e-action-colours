@@ -1,71 +1,50 @@
-import { SmartFinder } from "./pathfinding.js";
+import { SmartFinder, testCollision } from "./pathfinding.js";
 
 export class GhostTrail {
     constructor() {
         this.modId = "phils-pf2e-action-colours";
-        // Store state by Token ID to survive Token redraws
-        // Map<string, { history: Array, graphics: PIXI.Graphics, timer: number, decayInterval: number }>
         this.states = new Map();
-
-        // Track tokens currently moving via Ruler to prevent double-recording in hooks
         this.activeRulerMoves = new Set();
     }
 
     init() {
-        const wrapperId = this.modId;
-
-        // Expose API for the wrapper to call
         game.modules.get(this.modId).api = this;
 
-        // 1. Socket Listener (Sync)
         game.socket.on(`module.${this.modId}`, (data) => {
             if (data.type === "trail" && data.tokenId && data.path) {
                 const token = canvas.tokens.get(data.tokenId);
                 if (token) {
                     this._addToHistory(token, data.path, false);
-                    // Remote trails are drawn immediately (no animation to wait for)
                     this._drawGhost(token);
                     this._resetTimeout(token);
                 }
             }
         });
 
-        // 2. Hooks
         Hooks.on("preUpdateToken", this._onPreUpdateToken.bind(this));
-        Hooks.on("updateToken", this._onUpdateToken.bind(this)); // Added
-
-        // Combat management
+        Hooks.on("updateToken", this._onUpdateToken.bind(this));
         Hooks.on("updateCombat", this._onUpdateCombat.bind(this));
         Hooks.on("deleteCombat", this._onDeleteCombat.bind(this));
-
-        // Hover
         Hooks.on("hoverToken", this._onHoverToken.bind(this));
-        // Control (Select)
-        Hooks.on("controlToken", (token, controlled) => {
+        Hooks.on("controlToken", (token) => {
             this._refreshGhost(token);
         });
-
-        // Clean up when token is deleted
         Hooks.on("deleteToken", (doc) => {
             this._clearTokenData(doc.id);
         });
 
-        // 3. Wrappers
         if (game.modules.get("lib-wrapper")?.active) {
-            // A. Ruler Wrapper (Measurement)
             const RulerClass = CONFIG.Canvas.rulerClass;
-            if (RulerClass && RulerClass.prototype && RulerClass.prototype.moveToken) {
+            if (RulerClass?.prototype?.moveToken) {
                 try {
-                    libWrapper.register(wrapperId, "CONFIG.Canvas.rulerClass.prototype.moveToken", this._wrapRulerMoveToken, "WRAPPER");
-                } catch (e) { console.error("GhostTrail: Ruler wrapper failed", e); }
+                    libWrapper.register(this.modId, "CONFIG.Canvas.rulerClass.prototype.moveToken", this._wrapRulerMoveToken, "WRAPPER");
+                } catch (e) {
+                    console.error("GhostTrail: Ruler wrapper failed", e);
+                }
             }
         }
-
-        // Mark as active since we use polling now, fallback logic is redundant but safe
-        this.deferredVisibilityActive = true;
     }
 
-    // --- STATE MANAGEMENT ---
     _getState(tokenId) {
         if (!this.states.has(tokenId)) {
             this.states.set(tokenId, {
@@ -91,47 +70,49 @@ export class GhostTrail {
         }
     }
 
-    _onUpdateToken(tokenDoc, changes, context, userId) {
+    _onUpdateToken(tokenDoc, changes) {
+        if (!this._shouldRecord()) return;
         if (!changes.x && !changes.y) return;
         const token = tokenDoc.object;
         if (!token) return;
 
-        // Wait for animation to finish then trigger "Arrival"
+        if (token._ghostTrailBlocking || this.activeRulerMoves.has(token.id)) return;
+
         this._waitForArrival(token);
     }
 
     async _waitForArrival(token) {
-        // Simple poll for isAnimating
-        // We wait up to 10s.
-        const start = Date.now();
-        while (token.isAnimating && (Date.now() - start < 10000)) {
-            await new Promise(resolve => setTimeout(resolve, 50));
+        const state = this._getState(token.id);
+        if (state.isWaitingForArrival) return;
+        state.isWaitingForArrival = true;
+
+        try {
+            const start = Date.now();
+            while (token.isAnimating && (Date.now() - start < 10000)) {
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+            this._onMovementEnd(token);
+        } finally {
+            state.isWaitingForArrival = false;
         }
-        this._onMovementEnd(token);
     }
 
-    /**
-     * Called when a token finishes moving (arrival).
-     */
     _onMovementEnd(token) {
         if (!this._shouldRecord()) return;
 
         const state = this._getState(token.id);
 
-        // 1. Make visible
-        if (state.history.length > 0) {
-            this._drawGhost(token);
+        if (token._pendingGhostPath && token._pendingGhostPath.length > 0) {
+            const clippedPath = this._clipPathToToken(token._pendingGhostPath, token);
+            this._addToHistory(token, clippedPath, true);
+            delete token._pendingGhostPath;
         }
 
-        // 2. Broadcast pending segments
-        if (game.settings.get(this.modId, "ghostTrailShare")) {
-            // We can broadcast the whole history or just new parts. 
-            // Simplest: Broadcast everything that hasn't been sent? 
-            // Actually, `_addToHistory` was refactored to broadcast immediately in my previous code.
-            // I need to update `_addToHistory` to NOT broadcast yet.
+        if (state.history.length > 0) {
+            this._requestDrawGhost(token);
+        }
 
-            // For now, let's just emit the full current history as a sync package on arrival.
-            // It's slightly more data but robust.
+        if (game.settings.get(this.modId, "ghostTrailShare")) {
             game.socket.emit(`module.${this.modId}`, {
                 type: "trail",
                 tokenId: token.id,
@@ -139,141 +120,141 @@ export class GhostTrail {
             });
         }
 
-        // 3. Start Timeout (if applicable)
         this._resetTimeout(token);
     }
 
-    /**
-     * Wrap Ruler.moveToken to capture "Measured" moves.
-     * context 'this' is the Ruler instance.
-     */
     async _wrapRulerMoveToken(wrapped, ...args) {
         const api = game.modules.get("phils-pf2e-action-colours")?.api;
-
-        // If API is missing or recording disabled, just pass through
         if (!api || !api._shouldRecord()) {
             return wrapped.apply(this, args);
         }
 
-        // CAPTURE WAYPOINTS ROBUSTLY (Segments Backup)
         let capturedWaypoints = [];
 
-        // 1. Try to reconstruct from visual segments (Most accurate to what user sees)
         if (this.segments && this.segments.length > 0) {
-            // START point
             capturedWaypoints.push({ x: this.segments[0].ray.A.x, y: this.segments[0].ray.A.y });
-            // ALL intermediate points
             for (const seg of this.segments) {
                 capturedWaypoints.push({ x: seg.ray.B.x, y: seg.ray.B.y });
             }
         }
 
-        // 2. Fallback to this.waypoints if segments missing
         if (capturedWaypoints.length < 2) {
             const raw = this.waypoints || [];
             capturedWaypoints = raw.map(w => ({ x: w.x, y: w.y }));
         }
 
-        // 3. Fallback to args if all else fails
         if (capturedWaypoints.length < 2 && Array.isArray(args[0]) && args[0].length > 1) {
             capturedWaypoints = args[0].map(w => ({ x: w.x, y: w.y }));
         }
 
         let result;
         try {
-            // Flag tokens to prevent _onPreUpdateToken from interfering (Redundant Double Check)
             const movingTokens = this.token ? [this.token] : canvas.tokens.controlled;
             movingTokens.forEach(t => {
                 api.activeRulerMoves.add(t.id);
                 t._ghostTrailBlocking = true;
             });
 
-            // 1. Execute the move first!
             result = await wrapped.apply(this, args);
 
-            // Unflag 
             movingTokens.forEach(t => {
                 api.activeRulerMoves.delete(t.id);
                 delete t._ghostTrailBlocking;
             });
 
-            // 2. Compute the actual path taken
-            // (movingTokens is already defined above)
-
-            // Use CAPTURED waypoints
             if (capturedWaypoints.length > 1) {
                 for (const token of movingTokens) {
+                    let finalPath = null;
 
-                    // [GhostTrail Integration] Prefer PRE-CALCULATED SMART PATH (from main.js wrapper)
-                    // This ensures we match the grid highlights exactly, even if Ruler segments were simplified.
                     if (token._lastSmartPath && token._lastSmartPath.length > 0) {
-                        api._addToHistory(token, token._lastSmartPath, true);
-                        // Clear it to prevent reuse
+                        finalPath = [...token._lastSmartPath];
                         delete token._lastSmartPath;
-                    }
-                    else {
-                        // Fallback: ALWAYS calculate the Smart Path if possible.
-                        // This ensures we show the "Walked" path (Grid/A*) rather than the "Ruler" path (Straight Lines).
-                        // This fixes the "Luftlinie" issue where users expected to see their token's steps.
+                    } else {
                         const smartPath = api._getSmartPathFromWaypoints(capturedWaypoints, token);
-
-                        if (smartPath && smartPath.length > 0) {
-                            // OVERWRITE existing history (clears any "Straight Line" fallback added by _onPreUpdateToken)
-                            api._addToHistory(token, smartPath, true);
-                        } else {
-                            // Fallback: Use captured straight lines if Smart Finder fails
-                            api._addToHistory(token, capturedWaypoints, true);
-                        }
+                        finalPath = (smartPath && smartPath.length > 0)
+                            ? smartPath
+                            : capturedWaypoints.map(w => ({ x: w.x, y: w.y }));
                     }
 
-                    // FORCE DRAW: Since we blocked _onPreUpdateToken, the history logic was skipped during animation.
-                    // We must manually trigger the "Arrival" logic now.
+                    if (finalPath) {
+                        finalPath = api._clipPathToToken(finalPath, token);
+                        api._addToHistory(token, finalPath, true);
+                    }
+
                     api._onMovementEnd(token);
                 }
             }
         } catch (e) {
             console.error("GhostTrail: Wrapper error", e);
-            // Ensure flag is cleared on error
             const errorTokens = this.token ? [this.token] : canvas.tokens.controlled;
             errorTokens.forEach(t => api.activeRulerMoves.delete(t.id));
         }
         return result;
     }
 
-    /**
-     * Calculates the full granular path between all waypoints using SmartFinder.
-     * This creates a "Step-by-Step" trail instead of straight lines.
-     */
+    _clipPathToToken(path, token) {
+        if (!path || path.length < 2) return path;
+
+        const tx = token.x;
+        const ty = token.y;
+
+        const lastP = path[path.length - 1];
+        if (Math.hypot(lastP.x - tx, lastP.y - ty) < 5) {
+            return path;
+        }
+
+        function getClosest(Ax, Ay, Bx, By, Px, Py) {
+            const dx = Bx - Ax;
+            const dy = By - Ay;
+            if (dx === 0 && dy === 0) {
+                return { distSq: (Px - Ax) ** 2 + (Py - Ay) ** 2, x: Ax, y: Ay, t: 0 };
+            }
+            const t = ((Px - Ax) * dx + (Py - Ay) * dy) / (dx * dx + dy * dy);
+            const clampedT = Math.max(0, Math.min(1, t));
+            const x = Ax + clampedT * dx;
+            const y = Ay + clampedT * dy;
+            return { distSq: (Px - x) ** 2 + (Py - y) ** 2, x, y, t: clampedT };
+        }
+
+        const TOLERANCE_SQ = 25;
+
+        for (let i = path.length - 2; i >= 0; i--) {
+            const p1 = path[i];
+            const p2 = path[i + 1];
+            const result = getClosest(p1.x, p1.y, p2.x, p2.y, tx, ty);
+
+            if (result.distSq <= TOLERANCE_SQ) {
+                const newPath = path.slice(0, i + 1);
+                if (result.t > 0.01) newPath.push({ x: result.x, y: result.y });
+                return newPath;
+            }
+        }
+
+        return [...path.slice(0, path.length - 1), { x: tx, y: ty }];
+    }
+
     _getSmartPathFromWaypoints(waypoints, token) {
         if (!waypoints || waypoints.length < 2) return [];
 
-        // Respect setting: If Smart Routing is disabled, return null (fallback to straight lines)
         const smartEnabled = game.settings.get("phils-pf2e-action-colours", "smartRouting");
         if (!smartEnabled) return null;
 
-        const fullPath = [];
-        // Add start
-        fullPath.push({ x: waypoints[0].x, y: waypoints[0].y });
-
+        const fullPath = [{ x: waypoints[0].x, y: waypoints[0].y }];
         const finder = new SmartFinder(token);
 
         for (let i = 0; i < waypoints.length - 1; i++) {
             const start = waypoints[i];
             const end = waypoints[i + 1];
 
-            // If start and end are same, skip
             if (Math.hypot(start.x - end.x, start.y - end.y) < 1) continue;
 
             try {
-                // Calculate A* path for this segment
                 const segmentPath = finder.findPath({ x: start.x, y: start.y }, { x: end.x, y: end.y });
-
                 if (segmentPath && segmentPath.length > 0) {
                     for (const p of segmentPath) {
                         fullPath.push({ x: p.x, y: p.y });
                     }
                 } else {
-                    // Segment failed? Just push end point (Straight line segment)
                     fullPath.push({ x: end.x, y: end.y });
                 }
             } catch (e) {
@@ -285,137 +266,39 @@ export class GhostTrail {
         return fullPath;
     }
 
-    /**
-     * Traces the intended path segments. If a wall blocks movement between waypoints,
-     * stops there and uses A* to find a valid path to the token's actual final position.
-     */
-    _getBlockedPath(waypoints, token) {
-        if (!waypoints || waypoints.length < 2) return [{ x: token.x, y: token.y }];
-
-        const newPath = [];
-        // Always add start
-        newPath.push({ x: waypoints[0].x, y: waypoints[0].y });
-
-        const halfW = (token.w || 0) / 2;
-        const halfH = (token.h || 0) / 2;
-
-        let blockedAt = null;
-
-        for (let i = 0; i < waypoints.length - 1; i++) {
-            const A = waypoints[i];
-            const B = waypoints[i + 1];
-
-            const origin = { x: A.x + halfW, y: A.y + halfH };
-            const dest = { x: B.x + halfW, y: B.y + halfH };
-
-            const hasCollision = this._checkCollision(origin, dest);
-
-            if (hasCollision) {
-                // Collision! We stop at A.
-                blockedAt = A;
-                break;
-            } else {
-                // Path clear to B
-                newPath.push({ x: B.x, y: B.y });
-            }
-        }
-
-        // If we were blocked, bridge the gap with A*
-        if (blockedAt) {
-            // Start finding path from Last Valid Waypoint (blockedAt) to Token Final Pos
-            const finder = new SmartFinder(token);
-            // We use centers for simpler A* usually, but SmartFinder handles pixels
-            const path = finder.findPath({ x: blockedAt.x, y: blockedAt.y }, { x: token.x, y: token.y });
-
-            if (path && path.length > 0) {
-                // Append the calculated path
-                for (const p of path) {
-                    newPath.push({ x: p.x, y: p.y });
-                }
-            } else {
-                // Fallback: If A* fails, just connect to the token (rare)
-                newPath.push({ x: token.x, y: token.y });
-            }
-        } else {
-            // No block, just append final check
-            const last = newPath[newPath.length - 1];
-            if (Math.hypot(token.x - last.x, token.y - last.y) > 1) {
-                newPath.push({ x: token.x, y: token.y });
-            }
-        }
-
-        return newPath;
-    }
-
-    _checkCollision(p1, p2) {
-        // Safe wrapper for collision
-        if (typeof canvas === 'undefined' || !canvas.ready) return false;
-
-        // V11/V12 Standard
-        if (CONFIG.Canvas.polygonClass && CONFIG.Canvas.polygonClass.testCollision) {
-            return CONFIG.Canvas.polygonClass.testCollision(p1, p2, { type: "move", mode: "any" });
-        }
-        // Fallback
-        if (canvas.walls && canvas.walls.checkCollision) {
-            return canvas.walls.checkCollision(new Ray(p1, p2), { type: "move", mode: "any" });
-        }
-        return false;
-    }
-
-    _onPreUpdateToken(tokenDoc, changes, context, userId) {
+    _onPreUpdateToken(tokenDoc, changes) {
         if (!this._shouldRecord()) return;
         if (changes.x === undefined && changes.y === undefined) return;
 
         const token = tokenDoc.object;
-        if (!token) return;
+        if (!token || token._ghostTrailBlocking || this.activeRulerMoves.has(token.id)) return;
 
-        if (token._ghostTrailBlocking) return;
-
-        // Check 2: Centralized Set (if api available)
-        if (this.activeRulerMoves.has(token.id)) return;
-
-        // COOLDOWN CHECK (Global for this token)
         const state = this._getState(token.id);
         if (state.smartPathCooldown) {
-            const now = Date.now();
-            if (now < state.smartPathCooldown) {
-                return;
-            } else {
-                // Clean up expired
-                delete state.smartPathCooldown;
-            }
+            if (Date.now() < state.smartPathCooldown) return;
+            delete state.smartPathCooldown;
         }
 
-        // 1. Smart Routing Path (Drag & Drop Handling)
+        let intendedPath = [];
+
         if (token._lastSmartPath) {
-            // Set Cooldown to prevent Fallback logic from polluting this move
             state.smartPathCooldown = Date.now() + 2000;
-
-            // FORCE OVERWRITE to clear any prior garbage
-            this._addToHistory(token, token._lastSmartPath, true);
+            intendedPath = [...token._lastSmartPath];
             delete token._lastSmartPath;
-            return;
-        }
-
-        // 2. CHECK EXISTING HISTORY
-        if (state.history.length > 0) {
+        } else if (state.history.length > 0) {
             const last = state.history[state.history.length - 1];
             const destX = changes.x ?? token.x;
             const destY = changes.y ?? token.y;
 
-            if (Math.hypot(destX - last.x, destY - last.y) < 50) {
-                return;
-            }
+            if (Math.hypot(destX - last.x, destY - last.y) < 50) return;
+            intendedPath = [{ x: token.x, y: token.y }];
+        } else {
+            intendedPath = [{ x: token.x, y: token.y }];
         }
 
-        // 3. FALLBACK: Straight line
-        // CRITICAL CHECK: Are we cooling down from a Smart Path insertion?
-        if (state.smartPathCooldown && Date.now() < state.smartPathCooldown) {
-            return;
+        if (intendedPath.length > 0) {
+            token._pendingGhostPath = intendedPath;
         }
-
-        const start = { x: token.x, y: token.y };
-        this._addToHistory(token, [start]);
     }
 
     _shouldRecord() {
@@ -429,7 +312,6 @@ export class GhostTrail {
         const state = this._getState(token.id);
 
         if (overwrite) {
-            // Use length=0 to clear in-place, preserving references
             state.history.length = 0;
         }
 
@@ -438,39 +320,13 @@ export class GhostTrail {
                 const last = state.history[state.history.length - 1];
                 if (Math.hypot(p.x - last.x, p.y - last.y) < 10) continue;
             }
-            const point = { x: p.x, y: p.y, alpha: 1.0 };
-            state.history.push(point);
+            state.history.push({ x: p.x, y: p.y, alpha: 1.0 });
         }
-
-        // CHECK: Is the Deferred Visibility wrapper active?
-        // We use our internal flag set during init()
-        const deferredActive = this.deferredVisibilityActive;
-
-        // If Deferred Visibility is NOT active (or failed), we must draw/broadcast immediately 
-        // to prevent invisible trails.
-        if (!deferredActive) {
-            this._drawGhost(token);
-            this._resetTimeout(token);
-
-            // Sync
-            if (game.settings.get(this.modId, "ghostTrailShare")) {
-                game.socket.emit(`module.${this.modId}`, {
-                    type: "trail",
-                    tokenId: token.id,
-                    path: state.history
-                });
-            }
-        }
-
-        // Note: We DO NOT draw or broadcast here anymore. 
-        // We wait for _onMovementEnd.
     }
 
-    // --- TIMEOUT LOGIC ---
     _resetTimeout(token) {
         const state = this._getState(token.id);
 
-        // Stop active decay/timer
         if (state.decayInterval) {
             clearInterval(state.decayInterval);
             state.decayInterval = null;
@@ -480,24 +336,14 @@ export class GhostTrail {
             state.timer = null;
         }
 
-        // Restore visibility (in case we were fading)
         if (state.history.length > 0) {
             state.history.forEach(p => p.alpha = 1.0);
-            // Note: If we are moving, we might not want to draw yet?
-            // But _resetTimeout is called on arrival. So yes, draw.
-            this._drawGhost(token);
+            this._requestDrawGhost(token);
         }
 
-        // COMBAT LOGIC: If in combat, DO NOT start timeout.
-        const inCombat = game.combat?.started;
+        if (game.combat?.started) return;
+
         const timeoutSec = Number(game.settings.get(this.modId, "ghostTrailTimeout"));
-
-        if (inCombat) {
-            // Keep trail indefinitely (until next turn)
-            return;
-        }
-
-        // Out of combat: Use timeout
         if (timeoutSec > 0) {
             state.timer = setTimeout(() => {
                 this._startDecay(token);
@@ -528,31 +374,23 @@ export class GhostTrail {
             }
 
             if (state.history.length > 0) {
-                this._drawGhost(token);
+                this._requestDrawGhost(token);
             } else {
                 this._clearTokenData(token.id);
             }
         }, 50);
     }
 
-    _onUpdateCombat(combat, updateData, context, userId) {
+    _onUpdateCombat(combat) {
         if (!this._shouldRecord()) return;
-
-        // Turn Management: Clear trail when a token starts its NEW turn.
-        // We look at combat.combatant (the current turn taker).
         const combatant = combat.combatant;
-        if (!combatant) return;
-
-        const token = combatant.token?.object;
+        const token = combatant?.token?.object;
         if (token) {
-            // If this token has a trail, it's from the PREVIOUS round/turn.
-            // Clear it now so they have a fresh slate for this turn's move.
             this._clearTokenData(token.id);
         }
     }
 
     _onDeleteCombat() {
-        // Clear all trails when combat ends
         for (const id of this.states.keys()) {
             this._clearTokenData(id);
         }
@@ -560,19 +398,21 @@ export class GhostTrail {
 
     _onHoverToken(token, hovered) {
         if (!game.settings.get(this.modId, "ghostTrail")) return;
-
-        // Only draw if we have history. 
-        // Logic check: If in motion, history exists but is hidden.
-        // But hover shouldn't reveal it prematurely? 
-        // Token.animateMovement locks interaction often, so hover might not trigger.
-        // Safe to just draw if state exists.
-        if (hovered) this._drawGhost(token);
+        if (hovered) this._requestDrawGhost(token);
         else this._clearGhost(token);
     }
 
+    _requestDrawGhost(token) {
+        const state = this._getState(token.id);
+        if (state.drawPending) return;
+        state.drawPending = true;
+        requestAnimationFrame(() => {
+            state.drawPending = false;
+            this._drawGhost(token);
+        });
+    }
 
     _drawGhost(token) {
-        // STRICT VISIBILITY: Only if Hovered OR Selected
         if (!token.hover && !token.controlled) {
             this._clearGhost(token);
             return;
@@ -581,12 +421,10 @@ export class GhostTrail {
         const state = this._getState(token.id);
         if (!state || state.history.length === 0) return;
 
-        const getCenter = (x, y) => {
-            return {
-                x: x + (token.w / 2),
-                y: y + (token.h / 2)
-            };
-        };
+        const getCenter = (x, y) => ({
+            x: x + (token.w / 2),
+            y: y + (token.h / 2)
+        });
 
         if (!state.graphics || state.graphics.destroyed) {
             state.graphics = new PIXI.Graphics();
@@ -595,29 +433,17 @@ export class GhostTrail {
 
         const g = state.graphics;
         g.clear();
-        g.parentLayer = canvas.controls; // ensure layer
 
         const history = state.history;
-
-        // Color support
         const speed = this._getActorSpeed(token) || 30;
-        let cumulativeDist = 0;
 
-        if (history.length > 0) {
+        if (history.length > 1) {
             let prev = getCenter(history[0].x, history[0].y);
-
-            // [GhostTrail Refactor] Restore Color Segments (User Request)
-            // We draw each segment individually to apply the correct distance-based color.
-            // But we DO NOT draw the dots (circles) to keep it clean.
 
             for (let i = 1; i < history.length; i++) {
                 const p = history[i];
                 const curr = getCenter(p.x, p.y);
 
-                // [GhostTrail Fix] Use Cumulative Measurement
-                // Instead of summing segments (which breaks 5-10-5 diagonal rules),
-                // we measure the Full Path from Start to Here.
-                // This ensures we match the Ruler's distance calculation exactly.
                 const pathSoFar = history.slice(0, i + 1);
                 const measurement = canvas.grid.measurePath(pathSoFar);
                 const currentDist = measurement.distance;
@@ -630,48 +456,40 @@ export class GhostTrail {
                 const segAlpha = Math.min(alpha1, alpha2) * 0.6;
 
                 if (segAlpha > 0.01) {
-                    g.lineStyle(4, color, segAlpha);
-                    g.moveTo(prev.x, prev.y);
-                    g.lineTo(curr.x, curr.y);
+                    this._drawLine(g, prev, curr, 4, color, segAlpha);
                 }
                 prev = curr;
             }
-
-            // Draw current token connection if needed
-            const lastP = history[history.length - 1];
-            if (lastP) {
-                const curr = getCenter(token.x, token.y);
-
-                // Measure final segment including token pos
-                const fullPath = [...history, { x: token.x, y: token.y }];
-                const measurement = canvas.grid.measurePath(fullPath);
-                const finalDist = measurement.distance;
-
-                const colorHex = this._pickColor(finalDist, speed);
-                const color = parseInt(colorHex.replace("#", ""), 16);
-
-                g.lineStyle(4, color, 0.6);
-                g.moveTo(prev.x, prev.y);
-                g.lineTo(curr.x, curr.y);
-            }
-            // End Line
-
-            // Remove the Dot Drawing Logic entirely
-            /*
-            // Re-calculate dist for dots to match lines
-            let dotDist = 0;
-            if (history.length > 0) { ... }
-            */
         }
+    }
 
-
+    _drawLine(g, p1, p2, width, color, alpha) {
+        if (typeof g.lineStyle === "function") {
+            g.lineStyle(width, color, alpha);
+            g.moveTo(p1.x, p1.y);
+            g.lineTo(p2.x, p2.y);
+        } else {
+            g.moveTo(p1.x, p1.y);
+            g.lineTo(p2.x, p2.y);
+            if (typeof g.stroke === "function") {
+                g.stroke({ width, color, alpha });
+            }
+        }
     }
 
     _getActorSpeed(token) {
-        const actor = token.actor;
+        const actor = token?.actor;
         if (!actor) return null;
+
         const path = String(game.settings.get(this.modId, "speedAttribute") || "");
         let v = foundry.utils.getProperty(actor, path);
+
+        if (v === undefined || v === null) {
+            const speeds = actor.system?.movement?.speeds;
+            const land = speeds?.land;
+            v = typeof land === "number" ? land : (land?.total ?? land?.value ?? actor.system?.attributes?.speed?.total ?? actor.system?.attributes?.speed?.value);
+        }
+
         if (typeof v === "number") return v;
         if (v && typeof v.total === "number") return v.total;
         if (v && typeof v.value === "number") return v.value;
@@ -679,7 +497,7 @@ export class GhostTrail {
             const m = v.match(/-?\d+(\.\d+)?/);
             if (m) return Number(m[0]);
         }
-        return null;
+        return Number(game.settings.get(this.modId, "fallbackSpeed")) || 30;
     }
 
     _pickColor(distance, baseSpeed) {
@@ -714,7 +532,7 @@ export class GhostTrail {
     }
 
     _refreshGhost(token) {
-        if (token.hover || token.controlled) this._drawGhost(token);
+        if (token.hover || token.controlled) this._requestDrawGhost(token);
         else this._clearGhost(token);
     }
 }

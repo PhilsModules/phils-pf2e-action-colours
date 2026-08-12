@@ -3,7 +3,7 @@
         "settings": {
             "speedAttribute": {
                 "name": "Geschwindigkeits-Attribut Pfad",
-                "hint": "Objektpfad zum Auslesen der Geschwindigkeit (PF2e Standard funktioniert ab Werk)."
+                "hint": "Pfad zum Geschwindigkeitswert ODER dem übergeordneten Objekt (z.B. system.movement.speeds). Über das Token HUD kann gewechselt werden."
             },
             "dashMultiplier": {
                 "name": "Aktions-Ringe / Multiplikator",

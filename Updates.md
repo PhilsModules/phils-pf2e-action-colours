@@ -1,3 +1,22 @@
+# Phil's PF2e Action Colours v1.7.0
+
+**Performance Optimizations, Improved Reliability & Refinements:**
+
+- **Performance & Responsiveness:**
+  - Streamlined token movement handling for noticeably smoother and faster drag-and-drop response times.
+  - Optimized module loading and startup routines.
+- **Smart Routing & Combat Modes:**
+  - Fixed an issue where the routing mode setting ("Always" vs. "Only in Combat") was not strictly applied in all scenarios.
+  - Improved wall collision detection for smoother navigation around complex obstacles in Foundry V13 and V14.
+- **Ghost Trail Improvements:**
+  - Enhanced multi-speed movement support (Fly, Swim, Burrow, Climb) for accurate speed and color tracking.
+  - Reduced memory footprint and background processing during long combat encounters.
+  - Removed unnecessary development console logs.
+- **Settings & Translations:**
+  - Cleaned up settings and translation files for English and German.
+
+=======================================
+
 # Phil's PF2e Action Colours v1.6.3
 
 **Foundry V14 Support & Ghost Trail Fixes:**

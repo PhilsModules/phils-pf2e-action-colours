@@ -3,7 +3,7 @@
         "settings": {
             "speedAttribute": {
                 "name": "Speed Attribute Path",
-                "hint": "Object path on the actor to read base speed from (PF2e default works out of the box)."
+                "hint": "Path to the speed value OR the parent object containing speeds (e.g. system.movement.speeds). Token HUD allows toggling between them."
             },
             "dashMultiplier": {
                 "name": "Action Rings / Multiplier",

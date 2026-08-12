@@ -1,31 +1,17 @@
-
-import { SmartFinder } from "./pathfinding.js";
+import { SmartFinder, testCollision } from "./pathfinding.js";
 import { GhostTrail } from "./ghost-trail.js";
 
 const MOD_ID = "phils-pf2e-action-colours";
 
-// Detect v13+
 function isV13Plus() {
-  try {
-    const gen = (game?.release?.generation ?? parseInt((game?.version ?? "0").split(".")[0] || "0"));
-    return Number.isFinite(gen) && gen >= 13;
-  } catch (e) {
-    return true;
-  }
+  const gen = game?.release?.generation;
+  return Number.isFinite(gen) && gen >= 13;
 }
 
-// Settings
 function registerSettings() {
   const S = (key, data) => game.settings.register(MOD_ID, key, data);
-  const I = (key) => `phils-pf2e-action-colours.settings.${key}`;
+  const L = (key) => game.i18n.localize(`phils-pf2e-action-colours.settings.${key}`);
 
-  // Helper to safely localize
-  const L = (key) => {
-    const stringId = I(key);
-    return game.i18n.localize(stringId);
-  };
-
-  // --- Core Configuration ---
   S("speedAttribute", {
     name: L("speedAttribute.name"),
     hint: L("speedAttribute.hint"),
@@ -45,7 +31,6 @@ function registerSettings() {
     default: 30
   });
 
-  // --- Visuals: Colors ---
   S("walkColor", {
     name: L("walkColor.name"),
     scope: "world",
@@ -88,7 +73,6 @@ function registerSettings() {
     default: 3
   });
 
-  // --- Features: Smart Routing ---
   S("smartRouting", {
     name: L("smartRouting.name"),
     hint: L("smartRouting.hint"),
@@ -111,7 +95,6 @@ function registerSettings() {
     default: "combat"
   });
 
-  // --- Features: Ghost Trail ---
   S("ghostTrail", {
     name: L("ghostTrail.name"),
     hint: L("ghostTrail.hint"),
@@ -143,6 +126,7 @@ function registerSettings() {
     range: { min: 0, max: 60, step: 1 },
     default: 5
   });
+
   S("ghostTrailShare", {
     name: L("ghostTrailShare.name"),
     hint: L("ghostTrailShare.hint"),
@@ -159,93 +143,64 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   if (!isV13Plus()) {
-    console.warn(`${MOD_ID}: Foundry < v13 detected. This overlay is v13-only.`);
+    console.warn(`${MOD_ID}: Foundry < v13 detected. This module requires Foundry v13+.`);
     return;
   }
 
-  // Migration: If user has old default, update it
   const currentSpeedAttr = game.settings.get(MOD_ID, "speedAttribute");
   if (currentSpeedAttr && currentSpeedAttr.startsWith("system.attributes.speed")) {
-    console.log(`${MOD_ID}: Migrating deprecated speed attribute to system.movement.speeds.land`);
     game.settings.set(MOD_ID, "speedAttribute", "system.movement.speeds.land");
   }
 
-  // Migration: default multiplier to 3 if it was 2 (std value)
   const currentMult = game.settings.get(MOD_ID, "dashMultiplier");
   if (currentMult === 2) {
-    console.log(`${MOD_ID}: Auto-updating Dash Multiplier to 3 for PF2e Action Color support.`);
     game.settings.set(MOD_ID, "dashMultiplier", 3);
   }
 
   if (!globalThis.libWrapper) {
-    ui.notifications?.error(`${MOD_ID}: libWrapper is required. Please install/enable it.`);
-    console.error(`${MOD_ID}: libWrapper missing.`);
+    ui.notifications?.error(`${MOD_ID}: libWrapper is required. Please install and enable it.`);
     return;
   }
 
-
-  // -------------------------------------------------------------------------
-  // STRATEGY: Wrap PF2e's native findMovementPath
-  // This is how modules like 'wayfinder' integrate.
-  // -------------------------------------------------------------------------
+  // Wrap PF2e native findMovementPath
   try {
     const tokenClass = CONFIG.Token.objectClass;
-    if (tokenClass && tokenClass.prototype.findMovementPath) {
-      const target = "CONFIG.Token.objectClass.prototype.findMovementPath";
-      console.log(`[DEBUG_SMART] Registering wrapper for ${target}`);
-
-      libWrapper.register(MOD_ID, target, function (wrapped, waypoints, options) {
-
-
-        // [Shift-Teleport] Bypass Smart Routing & PF2e Routing if Shift is held
-        // Return the direct waypoints as the path.
-        // v13: game.keyboard.isDown is removed. Use downKeys set.
+    if (tokenClass?.prototype.findMovementPath) {
+      libWrapper.register(MOD_ID, "CONFIG.Token.objectClass.prototype.findMovementPath", function (wrapped, waypoints, options) {
         const keys = game.keyboard.downKeys;
-        const isMod = keys && (keys.has("AltLeft") || keys.has("AltRight"));
+        const isAlt = keys && (keys.has("AltLeft") || keys.has("AltRight"));
 
-        if (isMod) {
-          // [GhostTrail Fix] still need to ensure lastSmartPath is set for straight lines?
-          // The code block below handles that for "this" token.
-          // Let's copy that small logic or just rely on the fact that straight lines are standard.
-          // Actually, standard ghost trail often listens to Ruler.
-          try {
-            const token = this.document ? this : (this.object ?? this);
-            const tokenObject = token.object || token;
-            if (tokenObject) {
-              tokenObject._lastSmartPath = waypoints.map(w => ({ x: w.x, y: w.y }));
-              setTimeout(() => {
-                if (tokenObject._lastSmartPath) delete tokenObject._lastSmartPath;
-              }, 10000);
-            }
-          } catch (e) { }
+        if (isAlt) {
+          const token = this.document ? this : (this.object ?? this);
+          const tokenObject = token.object || token;
+          if (tokenObject) {
+            tokenObject._lastSmartPath = waypoints.map(w => ({ x: w.x, y: w.y }));
+            setTimeout(() => {
+              delete tokenObject._lastSmartPath;
+            }, 10000);
+          }
 
           return {
             result: undefined,
             promise: Promise.resolve(waypoints),
-            cancel: () => { }
+            cancel: () => {}
           };
         }
 
-        // [GhostTrail Fix] ALWAYS Try to capture waypoints for the Ghost Trail,
-        // even if Smart Routing is disabled. This ensures "Straight Line" moves 
-        // with waypoints (set via 'f') are recorded correctly.
         try {
           const token = this.document ? this : (this.object ?? this);
           const tokenObject = token.object || token;
           if (tokenObject && waypoints && waypoints.length > 1) {
             tokenObject._lastSmartPath = waypoints.map(w => ({ x: w.x, y: w.y }));
-            // Auto-clear buffer if move doesn't happen
             setTimeout(() => {
-              if (tokenObject._lastSmartPath) delete tokenObject._lastSmartPath;
+              delete tokenObject._lastSmartPath;
             }, 10000);
           }
-        } catch (e) {
-          // Ignore errors here to ensure core movement isn't broken
-        }
+        } catch {}
 
         const smartEnabled = game.settings.get(MOD_ID, "smartRouting");
-
-        if (!smartEnabled) {
+        const routingMode = game.settings.get(MOD_ID, "routingMode");
+        if (!smartEnabled || (routingMode === "combat" && !game.combat?.started)) {
           return wrapped(waypoints, options);
         }
 
@@ -253,223 +208,150 @@ Hooks.once("ready", () => {
           const start = waypoints[waypoints.length - 2];
           const end = waypoints[waypoints.length - 1];
 
-
-
           if (start && end && (start.x !== end.x || start.y !== end.y)) {
             try {
               const token = this.document ? this : (this.object ?? this);
               const tokenObject = token.object || token;
 
+              const hasCollision = testCollision(start, end, "move", "any");
+              if (!hasCollision) {
+                return wrapped(waypoints, options);
+              }
 
               const finder = new SmartFinder(tokenObject);
               const path = finder.findPath(start, end);
 
               if (path && path.length > 0) {
                 const template = start || {};
-                // Preserve history (waypoints user already passed)
                 const newWaypoints = waypoints.slice(0, waypoints.length - 1);
 
-                // Construct SAFE waypoints.
-                // We need to copy metadata (for Ruler labels) but avoid circular refs (Stuck Token).
                 for (const p of path) {
                   const wp = { ...template, x: p.x, y: p.y };
-
-                  // Sanitize internal flags that might break DragHandler
                   delete wp._original;
                   delete wp._parent;
-
                   newWaypoints.push(wp);
                 }
 
-                // [GhostTrail Integration] Store the calculated path so GhostTrail can pick it up
-                // Increasing timeout to 10s to ensure it persists through the drag-drop interaction
                 if (tokenObject) {
                   tokenObject._lastSmartPath = newWaypoints.map(w => ({ x: w.x, y: w.y }));
                   setTimeout(() => {
-                    if (tokenObject._lastSmartPath) delete tokenObject._lastSmartPath;
+                    delete tokenObject._lastSmartPath;
                   }, 10000);
                 }
 
-                // [Fix for "Dots Everywhere" & Color Sync]
-                // 1. We MUST return the DENSE path (newWaypoints) to ensure Colors match the grid squares exactly.
-                // 2. We tag intermediate points as "Virtual" to hide them in the Ruler.
-                // 3. We use a try-catch to ensure that if tagging fails, we STILL return the correct path (Dense),
-                //    avoiding the "Straight Line" fallback.
-
-                try {
-                  if (newWaypoints.length > 2) {
+                if (newWaypoints.length > 2) {
+                  try {
                     const simplified = simplifyPath(newWaypoints);
-                    // Use Object Reference Set for speed and safety (simplifyPath returns refs)
                     const keepSet = new Set(simplified);
-
                     for (const wp of newWaypoints) {
                       if (!keepSet.has(wp)) {
                         wp._isVirtual = true;
                       }
                     }
+                  } catch (tagErr) {
+                    console.error(`${MOD_ID}: Error tagging virtual waypoints`, tagErr);
                   }
-                } catch (tagErr) {
-                  console.error(`${MOD_ID}: Error tagging virtual waypoints (defaulting to full path)`, tagErr);
                 }
 
-                // PF2e expects result to be undefined if using a promise
                 return {
                   result: undefined,
-                  promise: Promise.resolve(newWaypoints), // Return DENSE path for correct math
-                  cancel: () => { }
+                  promise: Promise.resolve(newWaypoints),
+                  cancel: () => {}
                 };
-
               }
             } catch (err) {
-              console.error(`${MOD_ID}: SmartRouting Crash:`, err);
+              console.error(`${MOD_ID}: SmartRouting error:`, err);
             }
           }
         }
         return wrapped(waypoints, options);
-
       }, "MIXED");
-
-    } else {
-      console.warn(`${MOD_ID}: findMovementPath not found on Token class. Is this PF2e system?`);
     }
   } catch (e) {
     console.error(`${MOD_ID}: Failed to register findMovementPath wrapper`, e);
   }
 
-  // -------------------------------------------------------------------------
-  // WRAPPER: Shift-Teleport Drop Logic (Instant Move)
-  // -------------------------------------------------------------------------
-  try {
-    const target = "CONFIG.Token.objectClass.prototype._onDragLeftDrop";
-    libWrapper.register(MOD_ID, target, function (wrapped, event) {
-      // Debug: Log everything
-      console.log(`${MOD_ID}: _onDragLeftDrop called`);
-      const keys = game.keyboard.downKeys;
-      const hasAlt = (event && event.altKey) || (keys && (keys.has("AltLeft") || keys.has("AltRight")));
-      console.log(`${MOD_ID}: Key Check | EventAlt: ${event?.altKey} | KeysHasAlt: ${keys && (keys.has("AltLeft") || keys.has("AltRight"))}`);
-
-      if (hasAlt) {
-        console.log(`${MOD_ID}: Alt detected. Registering Hook.`);
-        const myUuid = this.document.uuid;
-
-        // Force animation: false for the upcoming update
-        const hookId = Hooks.once("preUpdateToken", (doc, changes, options, userId) => {
-          console.log(`${MOD_ID}: preUpdateToken Fired! UpdateUUID: ${doc.uuid} | MyUUID: ${myUuid}`);
-          if (doc.uuid === myUuid) {
-            console.log(`${MOD_ID}: UUID Match! Applying Teleport options.`);
-            // V13: Force duration 0 to skip logic
-            options.animation = { duration: 0 };
-            options.teleport = true;
-          } else {
-            console.log(`${MOD_ID}: UUID Mismatch.`);
-          }
-        });
-
-        // Safety cleanup if update doesn't happen
-        setTimeout(() => {
-          Hooks.off("preUpdateToken", hookId);
-          console.log(`${MOD_ID}: Hook timeout cleanup.`);
-        }, 1000);
-      }
-      return wrapped(event);
-    }, "WRAPPER");
-  } catch (e) {
-    console.error(`${MOD_ID}: Failed to wrap _onDragLeftDrop`, e);
-  }
-
-
-  // -------------------------------------------------------------------------
-  // Wrap base Ruler segment styling (Measure tool)
-
+  // Ruler Segment Styling
   try {
     libWrapper.register(MOD_ID, "foundry.canvas.interaction.Ruler.prototype._getSegmentStyle",
       function (wrapped, waypoint) {
         const style = wrapped.call(this, waypoint) || { width: 6 };
         try {
-          const dist = waypoint?.measurement?.distance ?? 0;
-          const speed = getSpeedForRuler(this) ?? game.settings.get(MOD_ID, "fallbackSpeed");
-          const color = pickColor(dist, speed);
-          // Apply our colors
+          const actions = getNativeActionCount(this, waypoint);
+          const color = pickColor(actions);
           if (color) {
             style.color = color;
             style.alpha = 1.0;
           }
 
-          // Check for Teleport Mode (Alt)
           const keys = game.keyboard.downKeys;
           const isAlt = keys && (keys.has("AltLeft") || keys.has("AltRight"));
           if (isAlt) {
-            // Hide the line for cleaner visual (Ghost Trail deals with history)
             style.alpha = 0.0;
             style.visible = false;
           }
         } catch (e) {
-          console.error(`${MOD_ID}: error in base Ruler _getSegmentStyle`, e);
+          console.error(`${MOD_ID}: Error in base Ruler _getSegmentStyle`, e);
         }
         return style;
       }, "WRAPPER");
   } catch (e) {
-    console.error(`${MOD_ID}: failed to wrap base Ruler _getSegmentStyle`, e);
+    console.error(`${MOD_ID}: Failed to wrap base Ruler _getSegmentStyle`, e);
   }
 
-  // Wrap TokenRuler segment styling (token drag)
+  // TokenRuler Segment Styling
   try {
     libWrapper.register(MOD_ID, "foundry.canvas.placeables.tokens.TokenRuler.prototype._getSegmentStyle",
       function (wrapped, waypoint) {
         const style = wrapped.call(this, waypoint) || { width: 6 };
         try {
-          const dist = waypoint?.measurement?.distance ?? 0;
-          const speed = getSpeedForRuler(this) ?? game.settings.get(MOD_ID, "fallbackSpeed");
-          const color = pickColor(dist, speed);
+          const actions = getNativeActionCount(this, waypoint);
+          const color = pickColor(actions);
           if (color) {
             style.color = color;
             style.alpha = 1.0;
           }
         } catch (e) {
-          console.error(`${MOD_ID}: error in TokenRuler _getSegmentStyle`, e);
+          console.error(`${MOD_ID}: Error in TokenRuler _getSegmentStyle`, e);
         }
         return style;
       }, "WRAPPER");
   } catch (e) {
-    console.error(`${MOD_ID}: failed to wrap TokenRuler _getSegmentStyle`, e);
+    console.error(`${MOD_ID}: Failed to wrap TokenRuler _getSegmentStyle`, e);
   }
 
-  // Wrap TokenRuler grid highlight styling
+  // TokenRuler Grid Highlight Styling
   try {
     libWrapper.register(MOD_ID, "foundry.canvas.placeables.tokens.TokenRuler.prototype._getGridHighlightStyle",
       function (wrapped, waypoint, offset) {
         const style = wrapped.call(this, waypoint, offset) || {};
         try {
-          const dist = waypoint?.measurement?.distance ?? 0;
-          const speed = getSpeedForRuler(this) ?? game.settings.get(MOD_ID, "fallbackSpeed");
-          const color = pickColor(dist, speed);
+          const actions = getNativeActionCount(this, waypoint);
+          const color = pickColor(actions);
           if (color) {
             style.color = color;
-            style.alpha = 0.35; // slightly transparent fill
+            style.alpha = 0.35;
           }
         } catch (e) {
-          console.error(`${MOD_ID}: error in TokenRuler _getGridHighlightStyle`, e);
+          console.error(`${MOD_ID}: Error in TokenRuler _getGridHighlightStyle`, e);
         }
         return style;
       }, "WRAPPER");
   } catch (e) {
-    console.error(`${MOD_ID}: failed to wrap TokenRuler _getGridHighlightStyle`, e);
+    console.error(`${MOD_ID}: Failed to wrap TokenRuler _getGridHighlightStyle`, e);
   }
 
-  // -------------------------------------------------------------------------
-  // HIDE VIRTUAL DOTS & LABELS (V13)
-  // -------------------------------------------------------------------------
-  const rulersToWrap = [
+  // Suppress Virtual Waypoints (Dots & Labels)
+  const waypointStyleTargets = [
     "foundry.canvas.interaction.Ruler.prototype._getWaypointStyle",
     "foundry.canvas.placeables.tokens.TokenRuler.prototype._getWaypointStyle"
   ];
 
-  for (const target of rulersToWrap) {
+  for (const target of waypointStyleTargets) {
     try {
       libWrapper.register(MOD_ID, target, function (wrapped, waypoint, index) {
         const style = wrapped.call(this, waypoint, index);
-        if (waypoint && waypoint._isVirtual) {
-          // Return invisible style
+        if (waypoint?._isVirtual) {
           return {
             ...style,
             icon: null,
@@ -482,106 +364,104 @@ Hooks.once("ready", () => {
         }
         return style;
       }, "WRAPPER");
-    } catch (e) { /* Ignore if method doesn't exist (e.g. older v13 builds) */ }
+    } catch {}
   }
 
-  // Wrap Label Context to suppress text
   const labelContextTargets = [
     "foundry.canvas.interaction.Ruler.prototype._getWaypointLabelContext",
     "foundry.canvas.placeables.tokens.TokenRuler.prototype._getWaypointLabelContext"
   ];
+
   for (const target of labelContextTargets) {
     try {
       libWrapper.register(MOD_ID, target, function (wrapped, waypoint, index) {
-        if (waypoint && waypoint._isVirtual) {
-          return { text: "" }; // Empty text
+        if (waypoint?._isVirtual) {
+          return { text: "" };
         }
         return wrapped.call(this, waypoint, index);
       }, "WRAPPER");
-    } catch (e) { }
+    } catch {}
   }
+
+  // Global Hook: Alt-Teleport (Skip Animation)
+  Hooks.on("preUpdateToken", (tokenDoc, changes, options) => {
+    if (!changes.x && !changes.y) return;
+    const keys = game.keyboard.downKeys;
+    if (keys && (keys.has("AltLeft") || keys.has("AltRight"))) {
+      options.animation = { duration: 0 };
+      options.animate = false;
+      options.teleport = true;
+    }
+  });
 
   // Initialize Ghost Trail
   new GhostTrail().init();
-
-  // -------------------------------------------------------------------------
-  // GLOBAL HOOK: Teleport logic (Keyboard & Mouse)
-  // -------------------------------------------------------------------------
-  Hooks.on("preUpdateToken", (tokenDoc, changes, options, userId) => {
-    // Debug: Log entry
-    // console.log(`${MOD_ID}: Global Hook Fired!`, changes);
-    // Only care if x or y is changing (movement)
-    if (!changes.x && !changes.y) return;
-
-    // Check for Alt Key
-    const keys = game.keyboard.downKeys;
-    const isAlt = keys && (keys.has("AltLeft") || keys.has("AltRight"));
-
-    if (isAlt) {
-      // console.log(`${MOD_ID}: Alt-Move detected. Options BEFORE:`, options);
-
-      // "Option Bomb" to force teleport in V13 / PF2e
-      options.animation = { duration: 0 };
-      options.animate = false; // Legacy/Alternative
-      options.teleport = true; // PF2e specific
-    }
-  });
-  console.info(`${MOD_ID}: v13 overlay active.`);
 });
-/** Return actor speed in scene units for this ruler. */
-function getSpeedForRuler(ruler) {
-  // Prefer token ruler's actor
-  const actor = ruler?.token?.actor ?? canvas?.tokens?.controlled?.[0]?.actor ?? null;
+
+function getNativeActionCount(ruler, waypoint) {
+  if (!waypoint || !ruler) return null;
+
+  const segment = ruler.segments?.find(s => s.ray.B.x === waypoint.x && s.ray.B.y === waypoint.y);
+  if (!segment && !waypoint.measurement) return null;
+
+  const cost = waypoint.measurement?.cost ?? segment?.cost;
+  if (cost === undefined || cost === null) return null;
+
+  const token = ruler.token || ruler.object || canvas.tokens.controlled[0];
+  const actor = token?.actor;
   if (!actor) return null;
 
-  const path = String(game.settings.get(MOD_ID, "speedAttribute") || "");
-  let v = foundry?.utils?.getProperty?.(actor, path);
+  const actionType = waypoint.action || "land";
+  let speedValue = 0;
 
-  // Parse variations
-  if (typeof v === "number") return v;
-  if (v && typeof v.total === "number") return v.total;
-  if (v && typeof v.value === "number") return v.value;
-  if (typeof v === "string") {
-    const m = v.match(/-?\d+(\.\d+)?/);
-    if (m) return Number(m[0]);
+  const speeds = actor.system?.movement?.speeds;
+  const oldSpeed = !speeds ? actor.system?.attributes?.speed : null;
+
+  let speedObj = null;
+  if (speeds) {
+    const key = (actionType === "stride") ? "land" : actionType;
+    speedObj = speeds[key] ?? speeds["land"];
+  } else if (oldSpeed) {
+    if (actionType === "land" || actionType === "travel" || actionType === "stride") {
+      speedObj = oldSpeed;
+    } else {
+      speedObj = oldSpeed.otherSpeeds?.find(s => s.type === actionType);
+    }
   }
-  return null;
+
+  speedValue = typeof speedObj === "number" ? speedObj : (speedObj?.total ?? speedObj?.value ?? 0);
+
+  if (speedValue <= 0 && speeds?.land) {
+    const landObj = speeds.land;
+    speedValue = typeof landObj === "number" ? landObj : (landObj?.total ?? landObj?.value ?? 0);
+  }
+
+  if (speedValue <= 0) {
+    speedValue = Number(game.settings.get(MOD_ID, "fallbackSpeed")) || 30;
+  }
+
+  if (speedValue <= 0) return null;
+
+  if (cost <= speedValue) return 1;
+  if (cost <= speedValue * 2) return 2;
+  if (cost <= speedValue * 3) return 3;
+
+  return 4;
 }
 
-/** Decide color by distance thresholds. */
-function pickColor(distance, baseSpeed) {
-  const m = Number(game.settings.get(MOD_ID, "dashMultiplier")) || 0;
-  const walk = Number(baseSpeed) || 0;
-  const walkColor = String(game.settings.get(MOD_ID, "walkColor") || "#00ff00");
-  const dashColor = String(game.settings.get(MOD_ID, "dashColor") || "#ffff00");
-  const dashColor2 = String(game.settings.get(MOD_ID, "dashColor2") || "#FFA500");
-  const unreachableColor = String(game.settings.get(MOD_ID, "unreachableColor") || "#ff0000");
+function pickColor(actionCount) {
+  if (!actionCount) return null;
 
-  if (walk <= 0) return unreachableColor;
+  const colors = {
+    1: game.settings.get(MOD_ID, "walkColor"),
+    2: game.settings.get(MOD_ID, "dashColor"),
+    3: game.settings.get(MOD_ID, "dashColor2"),
+    4: game.settings.get(MOD_ID, "unreachableColor")
+  };
 
-  const eps = 1e-6;
-
-  // [Shift-Teleport] Logic moved to _getSegmentStyle to hide line
-  // const keys = game.keyboard.downKeys;
-  // const isMod = keys && (keys.has("AltLeft") || keys.has("AltRight"));
-  // if (isMod) {
-  //   return walkColor;
-  // }
-
-  if (distance <= walk + eps) return walkColor;
-  if (m >= 2 && distance <= (walk * 2) + eps) return dashColor;
-  if (m >= 3 && distance <= (walk * 3) + eps) return dashColor2;
-
-  // Fallback for higher multipliers
-  if (m > 1 && distance <= (walk * m) + eps) return dashColor2;
-
-  return unreachableColor;
+  return colors[actionCount] || colors[4];
 }
 
-/**
- * Simplifies a path by removing collinear points.
- * Returns only the turning points (and start/end).
- */
 function simplifyPath(points) {
   if (!points || points.length < 3) return points;
 
@@ -592,28 +472,21 @@ function simplifyPath(points) {
     const prev = points[i - 1];
     const curr = points[i];
 
-    // Direction vector
     const dx = curr.x - prev.x;
     const dy = curr.y - prev.y;
-    // Normalize (handles diagonal vs straight)
     const len = Math.hypot(dx, dy);
-    if (len < 0.001) continue; // Skip dupes
+    if (len < 0.001) continue;
 
-    // Use string representation for robust equality check
-    // (Float precision might be an issue, but usually grid is integer-aligned enough)
     const dirKey = `${(dx / len).toFixed(3)},${(dy / len).toFixed(3)}`;
 
     if (dirKey !== lastDir) {
       if (i > 1) {
-        // We changed direction. The PREVIOUS point was a corner.
         simplified.push(prev);
       }
       lastDir = dirKey;
     }
   }
 
-  // Always add end
   simplified.push(points[points.length - 1]);
-
   return simplified;
 }
