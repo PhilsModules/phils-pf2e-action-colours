@@ -1,167 +1,64 @@
+# Phil's PF2e Action Colours v2.0.0
+
+🎉 **The Big Pathfinder 2e Remaster Update — Smart Actions, Automatic Conditions & Accessibility!**
+
+### 🌟 Key Highlights:
+
+- **Accessibility & Color Vision Presets:**
+  - **Red-Green (Deuteranopia / Green-Weakness):** High-contrast color palette using Cobalt Blue, Sun Yellow, Amber Orange, Violet, and Brick Red.
+  - **Red-Green (Protanopia / Red-Weakness):** Distinct palette using Sky Blue, Yellow, Orange, Deep Blue, and Magenta.
+  - **Blue-Yellow (Tritanopia):** Clear palette using Emerald Mint, Soft Rose, Crimson, Silver White, and Dark Slate.
+
+- **Full Automatic Condition Detection:**
+  - **Prone:** The module immediately detects when a character is knocked down and automatically switches movement to Crawl (5 feet per action).
+  - **Feat Support:** Automatically recognizes feats like *Nimble Crawl* (half or full speed crawl) and *Swift Sneak* (full speed sneak).
+  - **Movement Blocked:** If a token is immobilized, paralyzed, restrained, grabbed, petrified, or unconscious, the entire ruler is locked to 0 ft (Red / Unreachable).
+  - **Slowed & Stunned:** Dynamically reduces your available action budget — excessive distances turn red.
+  - **Quickened (Haste):** Automatically unlocks a 4th action ring (Cyan/Light Blue) when a character has extra actions!
+
+- **Modern Side-by-Side Settings Menu:**
+  - A clean, compact 2-column configuration window designed to fit comfortably on all screen sizes and laptops.
+  - Real-time Live Action Ruler preview bar that updates instantly when picking colors or selecting presets.
+  - 1-Click color presets for both Accessibility and Style (*Standard PF2e, Vibrant Neon, Pastel Soft*).
+  - Dedicated GM settings separation with visual indicators and permission safeguards.
+
+- **Accurate Movement Speeds:**
+  - Characters without a Fly or Burrow speed who switch modes can no longer glide across the map — the ruler correctly shows the mode as unreachable (0 ft).
+  - Swimming and climbing without specific speeds now use rule-accurate Athletics fallbacks.
+
+- **Improved Pathfinding & Ghost Trail:**
+  - Tokens navigate around walls more reliably without clipping through corners.
+  - Large tokens (2×2, 3×3) remain snapped pixel-perfect to grid squares.
+  - Smart routing gracefully turns off on gridless maps.
+  - Ghost trails in combat now stay reliably visible even when intermediate combat updates happen (like taking damage).
+
+=======================================
+
 # Phil's PF2e Action Colours v1.7.0
 
-**Performance Optimizations, Improved Reliability & Refinements:**
+**Performance Optimizations & Refinements:**
 
-- **Performance & Responsiveness:**
-  - Streamlined token movement handling for noticeably smoother and faster drag-and-drop response times.
-  - Optimized module loading and startup routines.
-- **Smart Routing & Combat Modes:**
-  - Fixed an issue where the routing mode setting ("Always" vs. "Only in Combat") was not strictly applied in all scenarios.
-  - Improved wall collision detection for smoother navigation around complex obstacles in Foundry V13 and V14.
-- **Ghost Trail Improvements:**
-  - Enhanced multi-speed movement support (Fly, Swim, Burrow, Climb) for accurate speed and color tracking.
-  - Reduced memory footprint and background processing during long combat encounters.
-  - Removed unnecessary development console logs.
-- **Settings & Translations:**
-  - Cleaned up settings and translation files for English and German.
+- Faster response times during token drag-and-drop.
+- More reliable routing around obstacles during combat.
+- Improved Ghost Trail display across multiple movement types (Fly, Swim, Climb).
+- Cleaned up settings and translation files.
 
 =======================================
 
 # Phil's PF2e Action Colours v1.6.3
 
-**Foundry V14 Support & Ghost Trail Fixes:**
+**Foundry V14 Support & Fixes:**
 
-- **Foundry V14 Compatibility:** Fully verified and updated for Foundry V14 rendering and canvas updates.
-- **Ghost Trail Pathing Fix:** Fixed an issue where the Ghost Trail would draw an incorrect diagonal shortcut line across the map. The trail now perfectly follows the exact path walked by the token.
-- **Performance Optimizations:**
-  - Removed redundant intermediate points on straight movement lines to prevent GPU buffer warnings during drag and drop.
-  - Optimized movement arrival tracking to prevent duplicate background polling loops.
-  - Debounced trail redrawing for smoother performance.
-- **Improved Wall Collision Check:** Standardized wall collision detection across all components to ensure reliable pathing across Foundry V12, V13, and V14.
-
-=======================================
-
-# Phil's PF2e Action Colours v1.6.2
-
-**Ghost Trail Visual Overhaul (Zig-Zag Fix):**
-
-- **Smooth Straight Lines:** Fixed the logic that forced the Ghost Trail to "snap" to grid centers (causing a "Zig-Zag" or "Staircase" effect). Straight lines are now rendered as smooth, direct vectors, matching the Ruler's appearance.
-- **Robust Alignment:** Implemented a new "Relative Offset" system for aligning the trail. Instead of guessing whether a path is centered or top-left based on grid size, we now calculate the exact vector difference between the Token's Top-Left corner and the Ruler's Start Point. This guarantees pixel-perfect alignment for **all token sizes** (including 2x2, 3x3, etc.).
-- **Correct Color Segments:** Restored "Path Densification" (generating intermediate points) for straight lines without the Zig-Zag side effect. This ensures the trail is correctly colored (Green -> Yellow -> Orange) based on action cost, even for long straight movements.
-
-=======================================
-
-# Phil's PF2e Action Colours v1.6.1
-
-**Ghost Trail Fix (Drag & Drop):**
-
-- **Deferred Recording:** Rewrote Drag & Drop logic to defer recording the Ghost Trail until the movement is _completed_ and _validated_.
-- **Wall Safety:** If a Drag & Drop move hits a wall (or is cancelled), the Ghost Trail now correctly stops at the wall instead of projecting through it.
-- **Accurate Tracking:** Fixed issues where "Intended" paths were shown instead of "Actual" paths, eliminating "fake" straight lines.
+- Verified compatibility and canvas rendering for Foundry V14.
+- Fixed an issue where the Ghost Trail would occasionally take incorrect diagonal shortcuts.
+- Improved performance during long straight movements.
 
 =======================================
 
 # Phil's PF2e Action Colours v1.6.0
 
-**Smart Routing & Ghost Trail Overhaul:**
+**Smart Routing & Ghost Trail:**
 
-- **Smart Routing Fixes:**
-  - **Combat Only:** Fixed a bug where "Smart Routing" was ignoring the "Combat Only" setting.
-  - **Corner Clipping:** Fixed tokens incorrectly clipping through corners due to overly aggressive optimization.
-  - **Gridless Support:** Smart Routing is now automatically disabled on Gridless maps to prevent "Staircase" movement.
-- **Ghost Trail Fixes:**
-  - **Fallback:** Fixed Ghost Trail showing "phantom paths" through walls when Smart Routing was disabled/blocked.
-  - **Coloring:** Fixed Ghost Trail appearing incorrectly monochrome (Orange) instead of multi-colored.
-
-**Bugfixes:**
-
-- Fixed "Undefined Property" crash in Ruler logic logic.
-- Fixed unexpected behavior when pathfinding encounters invalid segments.
-
-=======================================
-
-# Phil's PF2e Action Colours v1.5.0
-
-**Major Feature: Native Movement Support (Land, Fly, Swim, Burrow)**
-
-- **System Integration:** The module now natively reads your actor's specific movement speeds directly from the PF2e system data.
-- **Multiple Movement Types:** Fully supports **Fly**, **Swim**, **Burrow**, and **Climb** speeds!
-  - **How to use:** Right-click during a drag to open the **Movement Action Control** and select your movement type (e.g., Fly). The ruler colors will instantly update to match your Fly speed (e.g., 60ft instead of 25ft Land).
-- **Accurate Action Tracking:** Costs are calculated using the system's native logic, ensuring difficult terrain and other modifiers are handled 100% correctly.
-
-**Fixes & Improvements:**
-
-- **Smart Routing "Swerve" Fix:** Large tokens now move in a perfectly straight line on open ground. Added a "Line of Sight" optimization that bypasses complex pathfinding when no walls obstruct the path.
-- **Ghost Trail Recovery:** Straight-line movements (bypassing pathfinding) now correctly generate a "Dense Path" so the Ghost Trail feature continues to work seamlessly.
-- **V13 Compatibility:**
-  - Fixed `Ray` deprecation warning.
-  - Fixed `system.attributes.speed` deprecation warning.
-  - Fixed crash caused by removed `canvas.walls.checkCollision` API.
-
-=======================================
-
-# Phil's PF2e Action Colours v1.4.1
-
-- Manifest cleanup and normalization.
-
-=======================================
-
-# Phil's PF2e Action Colours v1.4.0
-
-**New Feature: Teleport Mode!**
-
-- **Alt-Teleport:** Hold the **Alt** key (Left or Right) while dragging a token to bypass Pathfinder.
-  - The path will draw a straight line through walls and obstacles.
-  - Dropping the token while holding **Alt** will teleport it instantly (skipping walk animation).
-
-=======================================
-
-# Phil's PF2e Action Colours v1.3.3
-
-**Fixes:**
-
-- **Pathfinding (Small Tokens):** Resolved issue where small tokens would "zig-zag" or be forced to the center of grid cells. Movement now respects exact start/end positions while smoothing intermediate steps.
-- **Deprecation Warning:** Fixed `system.attributes.speed` deprecation warning by updating migration logic to catch all variant settings.
-
-=======================================
-
-# Phil's PF2e Action Colours v1.3.2
-
-**Ghost Trail Visuals & Accuracy Refinement:**
-
-- **No More Dots:** The Ghost Trail is now a clean, continuous line without cluttering dots on every grid square.
-- **Perfect Color Sync:** Reworked the path distance calculation to match the grid precisely. The line segments (Green/Yellow/Orange) now transition exactly at the grid borders, consistent with PF2e's 5-10-5 diagonal movement rules.
-- **Steppy Alignment:** To ensure this perfect color/distance accuracy, the trail now follows the "Zig-Zag" (or Steppy) center-to-center path of the grid squares. This elimination of valid but "straight-cut" lines ensures that the visual representation matches the mathematical cost 1:1.
-- **Failsafe:** Added robust error handling to the Smart Finding algorithm to prevent regressions to "Straight Lines" when pathfinding encounters edge cases.
-
-=======================================
-
-# Phil's PF2e Action Colours v1.3.1
-
-**Bugfixes:**
-
-- **Critical Fix:** Resolved a `ReferenceError: api is not defined` that caused errors when dragging tokens with the Ghost Trail active.
-
-=======================================
-
-# Phil's PF2e Action Colours v1.3.0
-
-**Performance & Stability Update:**
-
-- **Performance:** Ghost Trail pathfinding is now verified to run at **~3ms** (Heatmap Benchmark).
-- **Bugfix:** Fixed the "Double Line"/"Zigzag" visual artifacts on the Ghost Trail.
-- **Bugfix:** Fixed "Closed Loop" artifacts where the trail would snap back to the start position incorrectly.
-- **Engine:** Improved path smoothing and "Cooldown" logic to reject noise from drag-and-drop operations.
-
-=======================================
-
-# Phil's PF2e Action Colours v1.2.1
-
-**Performance Update:**
-
-- **Faster Pathfinding:** Rewrote the routing algorithm to use a Binary Heap and Octile Heuristic. This results in 10x-50x faster calculations, preventing UI freezes on long distances.
-- **Dependency Update:** Updated module manifest to use Foundry V13's new `relationships` structure for dependencies.
-
-=======================================
-
-**New Major Features:**
-
-- **Smart Routing (New!):** Tokens now automatically route around walls when dragging (A\* Pathfinding).
-- **Ghost Trail (New!):** Hover over a token during combat to see the exact path it took this turn.
-- **Foundry V13 Support:** Fully optimized for the new V13 grid architecture.
-
-**Changes & Improvements:**
-
-- **Rebranding:** Now "Phil's PF2e Action Colours".
-- **Spiritual Successor:** This module carries on the legacy of the original Drag Ruler as a spiritual successor.
-- **Stability:** Fixes for pathfinding crashes and circular reference issues.
+- Tokens automatically route around walls when dragging.
+- Hovering over a token during combat reveals its movement path for the current round.
+- Distinct color coding for 1st, 2nd, and 3rd action distances.
