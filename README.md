@@ -3,7 +3,7 @@
 # Phil's PF2e Action Colours 🚥
 
 ![Foundry v14 Compatible](https://img.shields.io/badge/Foundry-v14-brightgreen?style=flat-square) ![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-green?style=flat-square) ![License](https://img.shields.io/badge/License-GPLv3_%2F_CC_BY--NC--ND-blue?style=flat-square)
-[![Version](https://img.shields.io/badge/Version-2.0.0-orange?style=flat-square)](https://github.com/PhilsModules/phils-pf2e-action-colours/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
+[![Version](https://img.shields.io/badge/Version-3.1.1-orange?style=flat-square)](https://github.com/PhilsModules/phils-pf2e-action-colours/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
 
 <br>
 
@@ -13,7 +13,7 @@ _Phil's PF2e Action Colours visualisiert die 3-Aktionen- (und 4-Aktionen-Beschle
 
 <br>
 
-<a href="#-english-instructions"><img src="https://img.shields.io/badge/%20-English_Instructions-black?style=for-the-badge&logo=united-kingdom&logoColor=white" alt="English Instructions"></a> <a href="#-deutsche-anleitung"><img src="https://img.shields.io/badge/%20-Deutsche_Anleitung-black?style=for-the-badge&logo=germany&logoColor=red" alt="Deutsche Anleitung"></a> <a href="Updates.md"><img src="https://img.shields.io/badge/%20-Update_Logs-black?style=for-the-badge&logo=clock&logoColor=white" alt="Updates"></a> <a href="#-more-modules-by-phil--meine-weiteren-module"><img src="https://img.shields.io/badge/%20-More_Modules_%2F_Weitere_Module-black?style=for-the-badge&logo=github&logoColor=white" alt="More Modules / Weitere Module"></a>
+<a href="#-english-instructions"><img src="https://img.shields.io/badge/%20-English_Instructions-black?style=for-the-badge&logo=united-kingdom&logoColor=white" alt="English Instructions"></a> <a href="#-deutsche-anleitung"><img src="https://img.shields.io/badge/%20-Deutsche_Anleitung-black?style=for-the-badge&logo=germany&logoColor=red" alt="Deutsche Anleitung"></a> <a href="Updates.md"><img src="https://img.shields.io/badge/%20-Update_Logs-black?style=for-the-badge&logo=clock&logoColor=white" alt="Updates"></a>
 
 </div>
 
@@ -23,18 +23,18 @@ _Phil's PF2e Action Colours visualisiert die 3-Aktionen- (und 4-Aktionen-Beschle
 > **A Quick Note / Hinweis in eigener Sache**
 >
 > 🇬🇧 **Hi everyone!**  
-> A quick note before you start: I create these modules completely in my free time and offer them to the community for free. Since neither my partner nor I are professional graphic designers, translators, or full-time developers, maintaining these projects takes a huge amount of effort. To make these modules possible in this form, I use assistance from artificial intelligence, especially for translations and visual elements. Hiring professional designers or translators is simply something I cannot afford out of pocket.
+> A quick note before you start: I create these modules completely in my free time and offer them to the community for free. Since neither my partner nor I are professional graphic designers, translators, or full time developers, maintaining these projects takes a huge amount of effort. To make these modules possible in this form, I use assistance from artificial intelligence, especially for translations and visual elements. Hiring professional designers or translators is simply something I cannot afford out of pocket.
 > 
-> Because of Foundry VTT's guidelines regarding artificial intelligence, several of my modules (such as *Phil's Day and Night Cycle*, *Phil's Console Doctor*, *Phil's PF2e RealDark*, and *Phil's Universal Translator*) have been removed from the official Foundry package listing. Even if a module is no longer listed there—or if others are removed in the future—do not worry: **the projects will continue!** You can always find all my modules, updates, releases, and manifest URLs directly here on [GitHub](https://github.com/PhilsModules) (see the [full module overview below](#-more-modules-by-phil--meine-weiteren-module)).
+> If these modules should ever be removed from the official Foundry package listing due to rules regarding artificial intelligence, do not worry. The project will continue! You can always find all updates, releases, and support directly here on GitHub.
 > 
 > Thank you so much for your understanding and support!
 > 
 > ---
 > 
 > 🇩🇪 **Hallo zusammen!**  
-> Ein kleiner Hinweis in eigener Sache, bevor ihr startet: Ich erstelle diese Module komplett in meiner Freizeit und stelle sie der Community kostenlos zur Verfügung. Da weder meine Lebensgefährtin noch ich Grafikdesigner, gelernte Übersetzer oder hauptberufliche Entwickler sind, ist die Pflege extrem aufwendig. Um die Module in dieser Form überhaupt anbieten zu können, nutze ich Unterstützung durch künstliche Intelligenz, zum Beispiel für Übersetzungen und grafische Elemente. Professionelle Designer oder Übersetzer kann ich mir privat schlicht nicht leisten.
+> Ein kleiner Hinweis in eigener Sache, bevor ihr startet: Ich erstelle diese Module komplett in meiner Freizeit und stelle sie der Community kostenlos zur Verfügung. Da weder meine Lebensgefährtin noch ich Grafikdesigner, gelernte Übersetzer oder hauptberufliche Entwickler sind, ist die Pflege extrem aufwendig. Um die Module in dieser Form überhaupt anbieten zu können, nutze ich Hilfe von künstlicher Intelligenz, zum Beispiel für Übersetzungen und grafische Elemente. Professionelle Designer oder Übersetzer kann ich mir privat schlicht nicht leisten.
 > 
-> Aufgrund der Richtlinien von Foundry VTT rund um künstliche Intelligenz wurden bereits mehrere meiner Module (wie z. B. *Phil's Day and Night Cycle*, *Phil's Console Doctor*, *Phil's PF2e RealDark* und *Phil's Universal Translator*) aus dem offiziellen Foundry-Verzeichnis entfernt. Auch wenn ein Modul dort nicht mehr gelistet ist – oder künftig noch weitere gelöscht werden sollten – müsst ihr euch keine Sorgen machen: **Das Projekt stirbt nicht!** Ihr findet alle meine Module, Updates, neue Versionen und Manifest-Links weiterhin direkt hier auf [GitHub](https://github.com/PhilsModules) (siehe die [komplette Modul-Übersicht weiter unten](#-more-modules-by-phil--meine-weiteren-module)).
+> Sollten die Module wegen der Nutzung von künstlicher Intelligenz oder veränderter Richtlinien irgendwann aus dem offiziellen Verzeichnis von Foundry gelöscht werden, müsst ihr euch keine Sorgen machen. Das Projekt stirbt nicht! Ihr findet alle Updates, neue Versionen und Unterstützung bei Problemen weiterhin direkt hier auf GitHub.
 > 
 > Vielen Dank für euer Verständnis und eure Unterstützung!
 
@@ -56,59 +56,101 @@ _Phil's PF2e Action Colours visualisiert die 3-Aktionen- (und 4-Aktionen-Beschle
 
 # <img src="https://flagcdn.com/48x36/gb.png" width="28" height="21" alt="EN"> English Instructions
 
-**Phil's PF2e Action Colours** brings the Pathfinder 2e **3-Action (and 4-Action Quickened) Economy** visualization to Foundry V13 and V14.
-It upgrades native Token Drag Measurement with clear, color-coded sections showing exactly how many actions a movement will cost.
+**Phil's PF2e Action Colours** brings the authentic **3-Action (and 4-Action Quickened) Economy** of Pathfinder 2e Remaster directly onto your battlemap in Foundry V13 and V14.
+Instead of counting squares or calculating distances in your head, the module color-codes your movement ribbon in real time, showing you at a glance how many actions a move will cost.
 
-## 🚀 Key Features
+Best of all: starting with version 3.x, the module thinks tactically for you! It respects walls, navigates closed doors, prevents fog-of-war spoilers, halts at ambushes, and automatically rolls Pathfinder 2e **Tumble Through** checks when you move through enemy spaces.
 
-- **👁️ Full Accessibility & 3 Colorblind Modes:**
-  - **Red-Green (Deuteranopia):** Scientifically tuned high-contrast palette (Cobalt Blue, Sun Yellow, Amber Orange, Violet, Brick Red).
+---
+
+## 🌟 New & Highlight Features (Explained Simply!)
+
+### 🤸 Automated PF2e Tumble Through Check
+- **The Rule:** In Pathfinder 2e, you can't simply walk through an enemy's square as if they weren't there.
+- **How it works:** When you drag a token across an opposing creature's space, your hero automatically walks up to the square right in front of the enemy, pauses, and automatically rolls a **Tumble Through** check (Acrobatics against the enemy's Reflex DC)!
+- **The Result:**
+  - ✅ **Success or Critical Success:** Your hero flips gracefully past the enemy and continues walking along the rest of their planned path!
+  - ❌ **Failure or Critical Failure:** Movement immediately stops safely right in front of the defender. No nasty surprises!
+- **Never get stuck on an enemy:** You can never accidentally end your move on top of an enemy token—movement safely stops in the last unoccupied square without rolling.
+- **Out-of-Combat Settings:** Game Masters can choose how exploration mode behaves: automatically roll the check, stop safely before foes, or allow free movement.
+
+### ⚡ Live Tumble Toggle (Hotkey: T)
+- **The Choice:** Want to run around an adversary rather than risking an Acrobatics check (or vice versa)?
+- **How it works:** While dragging your token with the mouse, simply tap **T** on your keyboard (customizable in settings). The movement ruler immediately recalculates right under your cursor—switching instantly between dodging around enemies and tumbling directly through them, with zero lag or token jitter.
+
+### 🌫️ Fog of War Anti-Spoiler Shield
+- **No more blind scouting:** In standard virtual tabletops, players sometimes drag tokens across black, unexplored areas to "feel out" walls or discover secret chambers through path calculation.
+- **How it works:** Dragging a token into pitch-black unexplored fog instantly turns your path bright warning red and blocks the movement. Hidden rooms and dungeon layouts remain a total mystery!
+- **Explored territory:** You can still freely navigate through previously explored rooms and corridors, even when they are currently shrouded in darkness or outside direct sight.
+
+### 🚪 Closed Door Smart Routing & Auto-Stops
+- **Clear visual feedback:** When plotting a path through an explored room blocked by a closed or locked door, the ruler shows your movement up to the door in your familiar action colors, and turns bright warning red behind the doorway.
+- **Polite stopping:** Releasing your token behind a closed door automatically walks your hero right up to the doorstep, stops in front of the door, and shows a friendly notice. Tokens will never accidentally phase through closed wooden doors!
+
+### 👁️ Corner Ambush Detection (Line-of-Sight Interception)
+- **The Scenario:** Your character runs down a hallway and rounds a corner, only to run into an unseen lurking monster waiting in the shadows.
+- **How it works:** Movement pauses immediately at the exact square where line of sight is gained. An interactive popup lets you choose:
+  - 🛑 **Replan Movement:** Cancel the rest of your move right at the corner to assess the threat and choose a new tactic.
+  - ⚔️ **Charge Forward:** Keep going and confront or tumble past the newly revealed enemy.
+
+### 🏰 Deep Dungeon Long-Distance Routing
+- **Smooth corridor travel:** Plan epic tactical journeys spanning up to 200 feet (40+ grid squares) through winding castle hallways, dungeons, and multi-room taverns without cutting corners through walls.
+
+### 👻 GM Ghost Mode (Foundry V14) & Alt-Teleport
+- **Unconstrained Movement Button:** Toggle the native Foundry V14 ghost button on the left scene controls palette to drag tokens through walls freely without needing any key combinations.
+- **Alt-Teleport:** Hold the **Alt key** while dragging any token to bypass all walls, closed doors, and terrain, instantly teleporting the token upon release with zero travel delay.
+
+---
+
+## ⚔️ Authentic PF2e Action Economy & Automatic Conditions
+
+### 🎨 Action Economy Colors
+- 🟢 **Green:** 1 Action (1× Stride – standard movement range)
+- 🟡 **Yellow:** 2 Actions (2× Stride – double move range)
+- 🟠 **Orange:** 3 Actions (3× Stride – full standard turn)
+- 🔵 **Cyan:** 4 Actions (Quickened / Haste)
+- 🔴 **Red:** Unreachable / Movement Blocked / Walls / Unexplored Fog
+
+### 🛌 Automatic Condition Engine
+- **Prone (Lying Down):** Automatically drops movement to **Crawl** at 5 ft per action.
+- **Feats:** Seamlessly recognizes feats like **Nimble Crawl** (faster crawl speed) and **Swift Sneak** (full speed stealth).
+- **Immobilized / Paralyzed / Restrained / Grabbed / Petrified / Unconscious:** Ruler immediately locks to 0 ft (all red).
+- **Slowed & Stunned:** Dynamically reduces your action budget so excessive distances turn red.
+- **Quickened (Haste):** Automatically unlocks the dynamic 4th action band (Cyan)!
+
+### 👁️ Accessibility & Style Presets
+- **1-Click Colorblind Presets:**
+  - **Red-Green (Deuteranopia):** Tuned high-contrast palette (Cobalt Blue, Sun Yellow, Amber Orange, Violet, Brick Red).
   - **Red-Green (Protanopia):** Tuned for red-deficiency (Sky Blue, Yellow, Orange, Deep Blue, Magenta).
   - **Blue-Yellow (Tritanopia):** Distinct palette (Emerald Mint, Soft Rose, Crimson, Silver White, Charcoal Dark).
-- **PF2e Remaster Dynamic Condition Engine:**
-  - 🛌 **Prone:** Automatically restricts movement along the ground to **Crawl** at 5 ft per action.
-  - 🏃 **Feat Support:** Automatically recognizes feats like **Nimble Crawl** (half or full speed crawl) and **Swift Sneak** (full speed sneak).
-  - 🛑 **Movement Blocked:** Tokens that are **Immobilized, Paralyzed, Restrained, Grabbed, Petrified, or Unconscious** immediately show the entire ruler in red.
-  - ⏳ **Slowed & Stunned:** Dynamically reduces your action budget; excessive distance turns Red.
-  - ⚡ **Quickened (Haste):** Automatically unlocks a dynamic **4th Action ring** (Cyan/Light Blue)!
-- **Smart Routing:** Dragging a token automatically routes around walls without clipping through corners.
-  - _Note: Automatically disabled on **Gridless** and Hex maps to ensure smooth movement._
-- **Ghost Trail:** Hover over a token during combat to see the exact path it took this turn.
-- **Action Economy Colors:**
-  - 🟢 **Green:** 1 Action (1× Stride)
-  - 🟡 **Gold-Yellow:** 2 Actions (2× Stride)
-  - 🟠 **Orange:** 3 Actions (3× Stride)
-  - 🔵 **Cyan:** 4 Actions (Quickened / Haste)
-  - 🔴 **Red:** Unreachable / Movement Blocked
-- **Modern Side-by-Side Settings Menu:**
-  - Compact 2-column configuration window designed for all screen sizes and laptops.
-  - Real-time Live Action Ruler preview bar.
-  - 1-Click presets for Style (*Standard, Vibrant Neon, Pastel Soft*) and Accessibility (*Deuteranopia, Protanopia, Tritanopia*).
-- **Multiple Speeds:** Supports Fly, Swim, Burrow, and Climb! Right-click while dragging to switch movement types.
-- **Teleport Mode (GM Only):** Hold **Alt** to ignore walls and drop to teleport instantly (skipping walk animation).
-- **Foundry V13 & V14 Optimized:** Ultra-lightweight native overlay with instant response times.
+- **Style Presets:** Standard PF2e, Vibrant Neon, Pastel Soft, or custom color pickers.
+
+### 👣 Ghost Trail
+- Hover over any token during combat to view an atmospheric ghost ribbon displaying the exact path it took during its turn.
+
+---
 
 ## 📦 Installation
 
-1.  Open Foundry VTT -> **Add-on Modules**.
-2.  Click **Install Module**.
-3.  Paste Manifest URL:
-    ```text
-    https://github.com/PhilsModules/phils-pf2e-action-colours/releases/latest/download/module.json
-    ```
-4.  Click **Install**.
+1. Open Foundry VTT -> **Add-on Modules**.
+2. Click **Install Module**.
+3. Paste Manifest URL:
+   ```text
+   https://github.com/PhilsModules/phils-pf2e-action-colours/releases/latest/download/module.json
+   ```
+4. Click **Install**.
 
-## 📖 How to Use
+---
 
-1.  **Configure:** Go to **Configure Settings -> Module Settings -> Phil's PF2e Action Colours** and click **Open Configuration** to customize colors or select a preset.
-2.  **Move:** Drag your token.
-    - **Alternate Speed:** Right-click on the token to open the **Movement Action Control** and switch to Fly/Swim/Burrow speed.
-3.  The ruler will instantly show:
-    - **Green** for your 1st action.
-    - **Yellow** when dipping into your 2nd action.
-    - **Orange** when using your 3rd action.
-    - **Cyan** if you are Quickened and have a 4th action.
-    - **Red** if the target is unreachable or movement is blocked.
+## 📖 How to Use (Quick Step-by-Step)
+
+1. **Move your Token:** Left-click and drag your token across the map. You will instantly see the color-coded action bands.
+2. **Toggle Tumble Mode:** While dragging, tap **T** to switch between running safely around enemies and tumbling directly through them.
+3. **Change Movement Speeds:** Right-click while dragging (or right-click the token) to switch between Fly, Swim, Burrow, and Climb modes.
+4. **Game Master Shortcuts:**
+   - Click the **Ghost icon** on the left scene controls palette (Foundry V14) to toggle unconstrained wall-passing.
+   - Or hold the **Alt key** while dragging to teleport through walls without animation.
+5. **Customize Colors & Settings:** Open **Configure Settings -> Module Settings -> Phil's PF2e Action Colours -> Open Configuration** to access the compact 2-column menu with real-time ruler preview.
 
 <br>
 
@@ -118,91 +160,107 @@ It upgrades native Token Drag Measurement with clear, color-coded sections showi
 
 # <img src="https://flagcdn.com/48x36/de.png" width="28" height="21" alt="DE"> Deutsche Anleitung
 
-**Phil's PF2e Action Colours** visualisiert die **3-Aktionen- (und 4-Aktionen-Beschleunigt) Ökonomie** von Pathfinder 2e Remaster direkt in Foundry V13 und V14.
-Es erweitert die native Bewegungsmessung um klare Farbbereiche, die dir sofort zeigen, wie viele Aktionen eine Bewegung kostet.
+**Phil's PF2e Action Colours** bringt die taktische **3-Aktionen-Ökonomie (plus 4. Aktion bei Hast)** von Pathfinder 2e Remaster direkt auf dein Spielfeld in Foundry V13 & V14.
+Statt mühsam Kästchen zu zählen oder Entfernungen im Kopf zu überschlagen, färbt das Modul dein Bewegungslineal beim Ziehen eines Tokens automatisch in klaren Farben ein. Du siehst sofort auf einen Blick, wie viele Aktionen ein Weg kostet.
 
-## 🚀 Funktionen
+Und ab Version 3.x denkt das Modul sogar taktisch mit: Es erkennt Wände, stoppt vor geschlossenen Türen, schützt vor Spoilern im Nebel des Krieges, warnt vor Hinterhalten und würfelt sogar automatisch das Pathfinder 2e **Hindurchturnen (Tumble Through)** für dich!
 
-- **👁️ Barrierefreiheit & 3 Farbfehlsichtigkeits-Modi:**
+---
+
+## 🌟 Die neuen Highlights & Features — Für jeden verständlich erklärt!
+
+### 🤸 Automatisches Hindurchturnen (PF2e Tumble Through)
+- **Die Regel:** Nach den Regeln von Pathfinder 2e darfst du feindliche Kreaturen nicht einfach ignorieren oder gemütlich durch sie hindurchspazieren.
+- **Wie es im Spiel funktioniert:** Wenn du dein Token über ein Feld ziehst, auf dem ein Gegner steht, stoppt dein Charakter automatisch direkt vor dem Feind und würfelt selbstständig einen **Hindurchturnen-Wurf** (Akrobatik gegen den Reflex-SG des Gegners)!
+- **Was passiert beim Wurf?**
+  - ✅ **Erfolg oder Kritischer Erfolg:** Dein Held hechtet geschmeidig durch den Gegner hindurch und setzt seinen restlichen Weg ganz normal fort!
+  - ❌ **Misserfolg oder Kritischer Fehlschlag:** Die Bewegung bricht sofort sicher vor dem Gegner ab. Keine bösen Überraschungen!
+- **Niemals im Gegner steckenbleiben:** Du kannst niemals aus Versehen im selben Feld wie ein Feind stehen bleiben—die Bewegung stoppt immer sicher auf dem letzten freien Feld, ohne unnötig zu würfeln.
+- **Einstellbar für die Spielleitung:** Außerhalb von Kämpfen kann die Spielleitung frei wählen: automatisch würfeln, brav vor Gegnern anhalten oder freie Bewegung ohne Einschränkung erlauben.
+
+### ⚡ Live-Umschalten beim Ziehen (Taste: T)
+- **Die Wahl:** Möchtest du lieber außen um die Gegnergruppe herumlaufen, anstatt dein Glück beim Hindurchturnen zu versuchen (oder umgekehrt)?
+- **Wie es geht:** Halte die linke Maustaste gedrückt und tippe einfach kurz auf die Taste **T** (in den Einstellungen frei anpassbar). Das Lineal schaltet sofort live unter deiner Maus um: einmal außen herum, noch ein Druck und du turnst wieder mittendurch—blitzschnell und ohne Ruckeln!
+
+### 🌫️ Nebel des Krieges & Anti-Spoiler-Schutz
+- **Schluss mit Meta-Gaming:** In vielen VTTs tasten Spieler im tiefschwarzen, noch nicht aufgedeckten Nebel mit Tokens herum, um geheime Wände oder verborgene Räume zu erraten.
+- **Wie es funktioniert:** Sobald du dein Token in unerforschten Nebel ziehst, färbt sich der Pfad knallrot und das Ablegen wird blockiert. Verborgene Dungeons und Geheimgänge bleiben geschützt!
+- **Bereits erkundete Räume:** Räume und Gänge, die deine Gruppe bereits erforscht hat, kannst du natürlich weiterhin problemlos durchqueren—auch wenn sie gerade im Schatten liegen.
+
+### 🚪 Schlaue Türen & Automatischer Tür-Stopp
+- **Klare Rückmeldung:** Ziehst du dein Token hinter eine geschlossene Tür, zeigt dir das Lineal den Weg bis zur Tür in deinen gewohnten Aktionsfarben und dahinter in Warnrot.
+- **Brav anhalten:** Lässt du das Token hinter der Tür los, läuft dein Held brav bis genau vor die Türschwelle und stoppt dort mit einem freundlichen Hinweis. Keine Tokens mehr, die aus Versehen durch geschlossene Holztüren teleportieren!
+
+### 👁️ Hinterhalt-Bremse an Ecken (Corner Ambush)
+- **Die Situation:** Dein Charakter rennt durch einen Korridor, biegt um die Ecke und steht plötzlich Auge in Auge mit einem lauernden Monster, das im toten Winkel gewartet hat.
+- **Wie es funktioniert:** Die Bewegung stoppt sofort an genau dem Feld, an dem du Sichtlinie zum Gegner bekommst! Ein kleines Fenster gibt dir sofort die Kontrolle zurück:
+  - 🛑 **Bewegung abbrechen (Neu planen):** Bleibe an der Ecke stehen, um die neue Gefahr einzuschätzen und deine Aktionen taktisch klug einzusetzen.
+  - ⚔️ **Weiterlaufen:** Stürme vorwärts, um den Feind direkt zu stellen oder an ihm vorbeizuturnen.
+
+### 🏰 Verwinkelte Gänge & Langstrecken-Routing
+- **Reisen durch Festungen & Dungeons:** Egal wie verwinkelt Schlossflure, Tavernen oder Katakomben sind: Das Modul plant flüssige Wege über Distanzen von bis zu 200 Fuß (40+ Felder) um jede Säule und Wand herum.
+
+### 👻 Spielleiter-Tricks: Geister-Modus (Foundry V14) & Alt-Teleport
+- **Geister-Button in Foundry V14:** Klicke einfach auf das native Geister-Symbol in der linken Szenen-Werkzeugleiste (Unconstrained Movement), um Tokens frei durch Wände zu ziehen—ganz ohne Tastenkombinationen.
+- **Alt-Teleport:** Halte beim Ziehen eines Tokens die **Alt-Taste** gedrückt, um Wände, Türen und Gelände komplett zu ignorieren. Das Token teleportiert beim Loslassen sofort ohne Reise-Animation an den Zielort!
+
+---
+
+## ⚔️ Intelligente PF2e-Regeln & Automatische Zustände
+
+### 🎨 Aktionsfarben
+- 🟢 **Grün:** 1. Aktion (1× Schreiten – einfache Reichweite)
+- 🟡 **Gold-Gelb:** 2. Aktionen (2× Schreiten – doppelte Reichweite)
+- 🟠 **Orange:** 3. Aktionen (3× Schreiten – dein kompletter Standard-Zug)
+- 🔵 **Cyan:** 4. Aktionen (Beschleunigt / Hast)
+- 🔴 **Rot:** Unerreichbar / Blockiert / Wände / Unerforschter Nebel
+
+### 🛌 Vollautomatische Zustandserkennung
+- **Liegend (Prone):** Schaltet die Bewegung automatisch auf **Kriechen** (5 Fuß pro Aktion) um.
+- **Talente:** Erkennt Talente wie **Flinkes Kriechen (Nimble Crawl)** oder **Schnelles Schleichen (Swift Sneak)** vollautomatisch und rechnet sie ein!
+- **Bewegungsunfähig / Gelähmt / Gefesselt / Bewusstlos:** Setzt die Reichweite sofort auf 0 ft (Lineal wird komplett rot).
+- **Verlangsamt & Betäubt:** Zieht automatisch Aktionen von deinem Aktionsbudget ab.
+- **Beschleunigt (Hast):** Schaltet automatisch einen 4. Aktionsring (Cyan) frei!
+
+### 👁️ Barrierefreiheit & Farbvielfalt
+- **1-Klick-Profile für Farbfehlsichtigkeiten:**
   - **Rot-Grün (Deuteranopie / Grünschwäche):** Wissenschaftlich optimierte Kontrastpalette (Kobaltblau, Sonnengelb, Orange, Rotviolett, Ziegelrot).
   - **Rot-Grün (Protanopie / Rotsehschwäche):** Spezielle Palette (Himmelblau, Gelb, Orange, Tiefblau, Magenta).
   - **Blau-Gelb (Tritanopie / Blaublindheit):** Klare Farbpalette (Smaragdgrün, Zartrosa, Karmesinrot, Silberweiß, Dunkelschiefer).
-- **PF2e Remaster Zustandserkennung:**
-  - 🛌 **Liegend (Prone):** Schaltet Bewegung automatisch auf **Kriechen (Crawl)** mit 5 Fuß pro Aktion um.
-  - 🏃 **Talenterkennung:** Erkennt Talente wie **Flinkes Kriechen (Nimble Crawl)** und **Schnelles Schleichen (Swift Sneak)** vollautomatisch.
-  - 🛑 **Bewegungsunfähig / Gelähmt / Gefesselt / Bewusstlos:** Setzt die Reichweite auf 0 ft (Lineal wird sofort rot).
-  - ⏳ **Verlangsamt (Slowed) & Betäubt (Stunned):** Reduziert das Aktionsbudget dynamisch; überzählige Distanzen werden rot.
-  - ⚡ **Beschleunigt (Quickened / Hast):** Schaltet automatisch einen **4. Aktionsring** (Cyan/Hellblau) frei!
-- **Smart Routing:** Tokens laufen beim Ziehen automatisch um Wände herum, ohne an Ecken hängenzubleiben.
-  - _Hinweis: Wird auf Karten ohne Raster (**Gridless**) oder Hex-Karten automatisch deaktiviert._
-- **Ghost Trail:** Fahre im Kampf über ein Token, um genau zu sehen, welchen Weg es in dieser Runde genommen hat.
-- **Aktionen-Farben:**
-  - 🟢 **Grün:** 1 Aktion (1× Schreiten)
-  - 🟡 **Gold-Gelb:** 2 Aktionen (2× Schreiten)
-  - 🟠 **Orange:** 3 Aktionen (3× Schreiten)
-  - 🔵 **Cyan:** 4 Aktionen (Beschleunigt / Quickened)
-  - 🔴 **Rot:** Unerreichbar / Blockiert
-- **Modernes 2-Spalten-Einstellungsmenü:**
-  - Kompaktes Konfigurationsfenster im Quest-Tracker-Design für alle Bildschirmgrößen und Laptops.
-  - Live-Lineal-Vorschau in Echtzeit.
-  - 1-Klick-Paletten für Design (*Standard PF2e, Vibrant Neon, Pastel Soft*) und Barrierefreiheit (*Deuteranopie, Protanopie, Tritanopie*).
-- **Mehrere Geschwindigkeiten:** Unterstützt Fliegen, Schwimmen, Graben und Klettern! Rechtsklick beim Ziehen, um den Bewegungstyp zu ändern.
-- **Teleport Modus (Nur GM):** Halte **Alt** gedrückt, um Wände zu ignorieren und ohne Animation sofort zu teleportieren.
-- **v13 & v14 Optimiert:** Leichtgewichtig, blitzschnell und ohne Konflikte.
+- **Stil-Presets:** Standard PF2e, Vibrant Neon, Pastel Soft – oder erstelle deine eigenen Farben.
+
+### 👣 Geisterpfad (Ghost Trail)
+- Fahre im Kampf mit der Maus über ein beliebiges Token, um als schicken Schweif zu sehen, welchen Weg es in dieser Runde genommen hat.
+
+---
 
 ## 📦 Installation
 
-1.  Foundry VTT öffnen -> **Add-on Module**.
-2.  **Modul Installieren** klicken.
-3.  Manifest-URL einfügen:
-    ```text
-    https://github.com/PhilsModules/phils-pf2e-action-colours/releases/latest/download/module.json
-    ```
-4.  **Installieren** klicken.
+1. Foundry VTT öffnen -> **Add-on Module**.
+2. **Modul Installieren** klicken.
+3. Manifest-URL einfügen:
+   ```text
+   https://github.com/PhilsModules/phils-pf2e-action-colours/releases/latest/download/module.json
+   ```
+4. **Installieren** klicken.
 
-## 📖 Bedienung
+---
 
-1.  **Konfiguration:** Gehe zu **Einstellungen -> Moduleinstellungen -> Phil's PF2e Action Colours** und klicke auf **Konfiguration öffnen**, um Farben oder Presets anzupassen.
-2.  **Bewegen:** Ziehe dein Token.
-    - **Alternative Geschwindigkeit:** Rechtsklick auf das Token, um die **Movement Action Control** zu öffnen und auf Fliegen/Schwimmen etc. zu wechseln.
-3.  Das Lineal zeigt sofort:
-    - **Grün** für deine 1. Aktion.
-    - **Gelb** wenn du die 2. Aktion anbrichst.
-    - **Orange** wenn du die 3. Aktion nutzt.
-    - **Cyan** wenn du beschleunigt bist und eine 4. Aktion hast.
-    - **Rot** wenn das Ziel unerreichbar oder die Bewegung blockiert ist.
+## 📖 Bedienung (Schnellanleitung)
+
+1. **Token greifen und ziehen:** Klicke mit der linken Maustaste auf dein Token und ziehe es. Du siehst sofort die farbigen Aktionsbereiche.
+2. **Hindurchturnen anpassen:** Drücke beim Ziehen kurz **T**, um fliegend zu entscheiden, ob du um Feinde herumläufst oder hindurchhechtest.
+3. **Fliegen, Schwimmen & Klettern:** Klicke beim Ziehen (oder vor dem Zug auf das Token) mit der rechten Maustaste, um alternative Fortbewegungsarten zu wählen.
+4. **Spielleiter-Optionen:**
+   - Nutze das **Geister-Icon** in der linken Leiste (Foundry V14), um ungehindert durch Wände zu ziehen.
+   - Oder halte **Alt** beim Ziehen gedrückt, um Wände zu ignorieren und sofort zu teleportieren.
+5. **Farben & Einstellungen anpassen:** Unter **Einstellungen -> Moduleinstellungen -> Phil's PF2e Action Colours -> Konfiguration öffnen** findest du das übersichtliche 2-Spalten-Menü mit Live-Vorschau.
 
 <br>
 
 ---
 
-## 🧩 More Modules by Phil / Meine weiteren Module
-
-🇬🇧 **Discover all of my Foundry VTT modules!**  
-Because of Foundry VTT's policies regarding AI assistance (which I use for translations and visual elements as a solo hobby developer), several of my modules have been removed from the official Foundry package directory. Below you can see which modules are still available directly on [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) and which ones are hosted exclusively on [GitHub](https://github.com/PhilsModules/). **All modules remain actively maintained** and can always be installed in Foundry VTT using their **Manifest URL**!
-
-🇩🇪 **Entdecke alle meine Foundry VTT Module!**  
-Aufgrund der Richtlinien von Foundry VTT zum Einsatz von künstlicher Intelligenz (die ich als Solo-Hobbyentwickler für Übersetzungen und Grafiken nutze) wurden einige meiner Module aus dem offiziellen Foundry-Verzeichnis entfernt. In der Tabelle siehst du auf einen Blick, welche Module noch direkt über [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) gelistet sind und welche exklusiv über [GitHub](https://github.com/PhilsModules/) bezogen werden können. **Alle Module werden aktiv weiterentwickelt** und lassen sich jederzeit über ihre **Manifest-URL** in Foundry VTT installieren!
-
-| Module / Modul | Foundry VTT Listing | Description (🇬🇧 EN / 🇩🇪 DE) | Links |
-| :--- | :---: | :--- | :---: |
-| **[Phil's Day and Night Cycle](https://github.com/PhilsModules/phils-day-night-cycle)** | ❌ **GitHub Only**<br>*(Removed due to AI policy / Wegen KI-Richtlinien entfernt)* | 🇬🇧 Immersive clock widget with Solar Arc, full calendar system, and a living weather engine featuring 360° wind physics, volumetric clouds, and 4,800+ narrative weather reports.<br>🇩🇪 Immersives Uhr-Widget mit Sonnenlauf, vollwertigem Kalendersystem und lebendiger Wetter-Engine mit 360°-Windphysik, volumetrischer Wolkendecke und über 4.800 Wetterberichten. | [GitHub](https://github.com/PhilsModules/phils-day-night-cycle) · [Manifest](https://github.com/PhilsModules/phils-day-night-cycle/releases/latest/download/module.json) |
-| **[Phil's Console Doctor & Task Manager](https://github.com/PhilsModules/phils-console-doctor)** | ❌ **GitHub Only**<br>*(Removed due to AI policy / Wegen KI-Richtlinien entfernt)* | 🇬🇧 Windows 11-style Task Manager & diagnostics suite for Foundry VTT with real-time CPU/GPU load breakdown, conflict detective, A/B culprit finder, and AI error analysis.<br>🇩🇪 Diagnose-Suite im Windows-11-Task-Manager-Stil mit Live-CPU/GPU-Auslastung, Konflikt-Detektiv, automatischem A/B-Problemlöser und KI-Fehleranalyse. | [GitHub](https://github.com/PhilsModules/phils-console-doctor) · [Manifest](https://github.com/PhilsModules/phils-console-doctor/releases/latest/download/module.json) |
-| **[Phil's PF2e RealDark](https://github.com/PhilsModules/phils-pf2e-realdark)** | ❌ **GitHub Only**<br>*(Removed due to AI policy / Wegen KI-Richtlinien entfernt)* | 🇬🇧 A true, customizable dark mode for Pathfinder 2e with 30+ handcrafted theme presets, live preview wizard, and high-contrast readability.<br>🇩🇪 Ein echter, anpassbarer Dark Mode für Pathfinder 2e mit über 30 kuratierten Presets, Live-Vorschau-Assistent und erstklassiger Lesbarkeit. | [GitHub](https://github.com/PhilsModules/phils-pf2e-realdark) · [Manifest](https://github.com/PhilsModules/phils-pf2e-realdark/releases/latest/download/module.json) |
-| **[Phil's Universal Translator](https://github.com/PhilsModules/phils-universal-translator)** | ❌ **GitHub Only**<br>*(Removed due to AI policy / Wegen KI-Richtlinien entfernt)* | 🇬🇧 System-agnostic local translation assistant for personal game prep with zero API costs, direct local LLM (Ollama) integration, LinkProtection, and 12-category lore glossary.<br>🇩🇪 Systemunabhängiger Übersetzungs-Assistent für die private Spielvorbereitung ohne API-Kosten, mit lokaler Ollama-Anbindung, LinkProtection und 12-Kategorien-Glossar. | [GitHub](https://github.com/PhilsModules/phils-universal-translator) · [Manifest](https://github.com/PhilsModules/phils-universal-translator/releases/latest/download/module.json) |
-| **[Phil's UI Tweaks](https://github.com/PhilsModules/phils-foundry-ui-tweaks)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 Customize, reorder, hide, and group Scene Controls (left toolbar) and Sidebar Tabs (right toolbar) into custom pop-out folders with a sleek Modern Dark UI.<br>🇩🇪 Passe die linke Werkzeugleiste und rechte Seitenleiste frei an – umsortieren, ausblenden und Tabs in eigenen Ausklapp-Ordnern im Modern Dark UI Design gruppieren. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-foundry-ui-tweaks) · [Manifest](https://github.com/PhilsModules/phils-foundry-ui-tweaks/releases/latest/download/module.json) |
-| **[Phil's Quest Tracker](https://github.com/PhilsModules/phils-quest-tracker)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 Immersive Quest Log in a Modern Dark UI featuring collaborative party quests, job boards, drag & drop rewards, and automatic calendar synchronization.<br>🇩🇪 Immersives Quest-Log im Modern Dark UI mit kollaborativen Gruppenquests, Auftragsbrett, Drag-&-Drop-Belohnungen und automatischer Kalender-Synchronisation. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-quest-tracker) · [Manifest](https://github.com/PhilsModules/phils-quest-tracker/releases/latest/download/module.json) |
-| **[Phil's PF2e AI Translator](https://github.com/PhilsModules/phils-pf2e-ai-translator)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 Next-Gen AI translation studio for Pathfinder 2e with `lang-de-pf2e` compendium integration (15,000+ official terms), LinkProtection, Smart-Sync, and zero API costs.<br>🇩🇪 KI-Übersetzungs-Studio für Pathfinder 2e mit `lang-de-pf2e`-Integration (über 15.000 offizielle Begriffe), LinkProtection, Smart-Sync und null API-Kosten. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-pf2e-ai-translator) · [Manifest](https://github.com/PhilsModules/phils-pf2e-ai-translator/releases/latest/download/module.json) |
-| **[Phil's PF2e Action Colours](https://github.com/PhilsModules/phils-pf2e-action-colours)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 Visualizes the Pathfinder 2e 3-Action (and 4-Action Quickened) economy on the drag ruler with dynamic condition/feat detection, smart routing, and 3 colorblind modes.<br>🇩🇪 Visualisiert die Pathfinder 2e 3-Aktionen-Ökonomie (inkl. 4. Aktion bei Hast) direkt beim Token-Ziehen – mit Zustandserkennung, Smart Routing und 3 Farbenblind-Modi. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-pf2e-action-colours) · [Manifest](https://github.com/PhilsModules/phils-pf2e-action-colours/releases/latest/download/module.json) |
-| **[Phil's Random Names](https://github.com/PhilsModules/phils-random-names)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 Deluxe generator suite with 5.3M+ NPC name combinations, tavern menus, treasure pouches, custom merchant shops, and 23,000+ entries with drag & drop item creation.<br>🇩🇪 Deluxe-Generator mit über 5,3 Mio. NSC-Namen, Tavernen-Menüs, Schatzbeuteln, eigenen Händler-Auslagen und über 23.000 Einträgen inkl. Drag-&-Drop-Item-Erstellung. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-random-names) · [Manifest](https://github.com/PhilsModules/phils-random-names/releases/latest/download/module.json) |
-| **[Phil's AI Assistant](https://github.com/PhilsModules/phils-ai-assistant)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 Connect your Foundry VTT world to Gemini, ChatGPT, Claude, Copilot, Perplexity, or local Ollama with zero API costs to write lore, edit items, and generate image prompts.<br>🇩🇪 Verbinde deine Foundry-Welt ohne API-Kosten mit Gemini, ChatGPT, Claude, Copilot, Perplexity oder lokal mit Ollama für Lore-Texte, Item-Anpassungen und Bild-Prompts. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-ai-assistant) · [Manifest](https://github.com/PhilsModules/phils-ai-assistant/releases/latest/download/module.json) |
-| **[Phil's Token Studio](https://github.com/PhilsModules/phils-token-studio)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 High-performance in-game visual token editor with layer management, smart masking, 3D pop-out effects, and Foundry Dynamic Token Ring integration.<br>🇩🇪 Leistungsstarker visueller Token-Editor direkt in Foundry VTT mit Ebenensystem, intelligenter Maskierung, 3D-Pop-out-Effekten und Dynamic-Token-Ring-Unterstützung. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-token-studio) · [Manifest](https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json) |
-| **[Phil's Journal Translator](https://github.com/PhilsModules/phils-journal-translator)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 System-agnostic AI translation assistant for Foundry VTT journals using free web AI services (Gemini, ChatGPT, Claude, etc.) with automatic backups.<br>🇩🇪 Systemunabhängiger KI-Übersetzungs-Assistent für Foundry VTT Journale über kostenlose Web-KIs (Gemini, ChatGPT, Claude etc.) mit automatischen Backups. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-journal-translator) · [Manifest](https://github.com/PhilsModules/phils-journal-translator/releases/latest/download/module.json) |
-| **[Phil's Random Quests](https://github.com/PhilsModules/phils-random-quests)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 Instant adventure and quest idea generator for Pathfinder 2e and D&D 5e when your party goes off the rails.<br>🇩🇪 Schneller Generator für spontane Abenteuer- und Quest-Ideen in Pathfinder 2e und D&D 5e am Spieltisch. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-random-quests) · [Manifest](https://github.com/PhilsModules/phils-random-quests/releases/latest/download/module.json) |
-| **[Phil's Art Replacer](https://github.com/PhilsModules/phils-art-replacer)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 Scans your entire world and installed modules to automatically find and replace missing actor and token artwork with side-by-side comparison.<br>🇩🇪 Durchsucht deine gesamte Welt und installierte Module, um fehlende Bilder für Akteure und Tokens automatisch mit Vorher-Nachher-Vergleich zu ersetzen. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-art-replacer) · [Manifest](https://github.com/PhilsModules/phils-art-replacer/releases/latest/download/module.json) |
-| **[Phil's Map Migrator](https://github.com/PhilsModules/phils-map-migrator)** | ✅ **Available**<br>*(Verfügbar)* | 🇬🇧 Professional scene migration tool with 1–5 point mathematical calibration, geometry failsafe, and automatic scaling for walls, lights, tokens, and pins.<br>🇩🇪 Profi-Werkzeug für präzise Szenen-Migration mit 1–5-Punkte-Kalibrierung, Geometrie-Wächter und automatischer Skalierung für Wände, Lichter, Tokens und Pins. | [Foundry VTT](https://foundryvtt.com/community/philsmodules/packages) · [GitHub](https://github.com/PhilsModules/phils-map-migrator) · [Manifest](https://github.com/PhilsModules/phils-map-migrator/releases/latest/download/module.json) |
-
----
+<br>
 
 ## 📜 License
 
