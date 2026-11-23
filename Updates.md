@@ -1,3 +1,92 @@
+# Phil's PF2e Action Colours v4.1.4 (2026-11-23)
+
+🎛️ **GM World Master Switches, "While Dragging" Tactical Mode & 1-Click Feature Controls!**
+
+### 🌟 Key Highlights:
+
+- 🌐 **World Master Switch for Tactical Cover & Flanking Banners:**
+  - **Global GM Toggle:** Added a new Game Master world toggle (**Enable Tactical Sightlines & Cover Banners (World)**) at the top of the *Tactical Preview* tab. Turning this switch off disables the on-map `Target +1 / +2 / +4 AC`, `Your Cover`, and `Flanked (-2 AC)` banners globally across the entire world for all connected players.
+
+- 🖱️ **New "While Dragging" Display Mode:**
+  - **No Idle Combat Banners:** Added **While Dragging** to the *Tactical Preview* options for groups who want live sightlines and cover banners while actively dragging a token to plan movement, without banners remaining visible above stationary selected tokens during combat.
+
+- ⚡ **1-Click GM Master Feature Controls:**
+  - **Disable All Tactical & Stealth:** Added a quick **Disable All Tactical & Stealth** button at the top of the *Tactical Preview* tab so Game Masters can turn off all tactical banners, automatic attack cover, the stealth assistant, and visibility hover badges in one click.
+  - **Classic Ruler Mode (All Extra Features Off):** Added a **GM Feature Master Control** card under *System & Profiles* with **Classic Ruler Only (All Off)** and **Enable All Features** buttons so Game Masters can disable all optional routing, tactical, stealth, condition, and ghost trail features at once to run only the classic colored movement ruler.
+
+=======================================
+
+# Phil's PF2e Action Colours v4.1.3 (2026-11-23)
+
+🛡️ **Accurate Attack-Direction Cover Geometry & Player Cover Override Options!**
+
+### 🌟 Key Highlights:
+
+- 🎯 **Strict Attack-Direction Cover Calculation (Walls & Creatures):**
+  - **No False Cover From Back or Side Walls:** Walls located behind a target or behind the attacker no longer grant cover when you attack from the front. Map walls drawn slightly inside the outer edge of a corridor or room square also no longer trigger false cover when a creature stands next to a wall.
+  - **Directional Intervening Creature Checks:** Lesser Cover (**+1 AC**) from other creatures now only applies when a creature stands directly between the attacker and the target along the line of fire. Bystanders standing behind the target, beside a diagonal melee strike, or Tiny creatures no longer grant cover.
+
+- 🔓 **Configurable Player Cover Override in Roll Dialogs:**
+  - **Trusted Players Enabled by Default:** Inside the *Tactical Preview* settings tab, Game Masters can now choose who is allowed to adjust or clear detected cover inside the attack roll modifiers dialog (**GM Only**, **Trusted Players & GM**, or **All Players**). Trusted Players are enabled by default.
+  - **Clear Chat Transparency:** Whenever an authorized player or the Game Master overrides detected cover down to **None** in the roll dialog, the attack chat card displays a compact note showing that the detected cover was overridden.
+
+=======================================
+
+# Phil's PF2e Action Colours v4.1.2 (2026-11-23)
+
+🧚 **Tiny Creature Pathfinding & PF2e Space-Sharing Rules Fix!**
+
+### 🌟 Key Highlights:
+
+- 🧭 **Accurate Pathfinding for Tiny Creatures:**
+  - **Direct Sub-Grid Movement:** Dragging a Tiny creature (such as a sprite or a familiar) across any part of a square now plots a direct route to the target spot instead of drifting into neighboring rows or columns before turning back.
+  - **Centered Obstacle Routing:** When a Tiny token routes around walls or doorways, intermediate steps stay centered inside each grid square so distance measurements and action colors match the actual path length.
+
+- 🐾 **PF2e Space-Sharing & Tumble Through Rules for Tiny Creatures:**
+  - **Free Movement Through Tiny Enemies:** Following official Pathfinder 2e rules for moving through a creature's space, characters can now walk straight through squares occupied by Tiny enemies and end their movement there without detouring around them or triggering a **Tumble Through** check.
+  - **Free Movement for Tiny Controlled Tokens:** When controlling a Tiny creature yourself, you can move freely through enemy spaces and end your movement inside their square without being blocked or prompted to roll **Acrobatics**.
+
+=======================================
+
+# Phil's PF2e Action Colours v4.1.1 (2026-11-21)
+
+🎯 **Player Choice Bar When Moving While Hidden!**
+
+### 🌟 Key Highlights:
+
+- 👣 **Interactive Player Prompt for Hidden Movement:**
+  - **Direct Player Choice:** When a player drags a **Hidden** token without rolling **Sneak** first, movement still pauses right away so their position is never spoiled. Players now receive their own quick action bar directly on screen to decide how to proceed.
+  - **Roll Sneak & Move:** Clicking **Roll Sneak & Move** starts the secret PF2e **Sneak** check right away and sends the planned destination square to the Game Master. Once the Game Master confirms visibility at the target square, the token completes its move automatically.
+  - **Continue & Become Visible:** Clicking **Continue & Become Visible** clears active stealth states for that character and finishes walking to the chosen destination openly. Players can also cancel the move with one click to stay hidden where they are.
+  - **Automatic Sync Between Player & GM:** Whichever side acts first automatically closes the prompt bar on the other screen, keeping gameplay clean with no lingering popups.
+
+=======================================
+
+# Phil's PF2e Action Colours v4.1.0 (2026-11-21)
+
+🕵️ **Party Stealth & Seek, Out-of-Combat Sneaking, GM Tumble Through Fixes & PF2e Speed Defaults!**
+
+### 🌟 Key Highlights:
+
+- 🤝 **Party Stealth & Seek (Configurable GM Setting):**
+  - **Hide From & Seek Fellow Party Members:** Player characters can now hide from and seek allied party members inside the Stealth & Seek Assistant. The option is enabled by default and can be toggled anytime in the *Tactical Preview* tab.
+  - **Clear Party Indicators & Clean Map Badges:** Allied observers and targets carry a clear **Party** tag inside the GM popup and whisper summary. On the battlemap itself, everyday lighting differences between allies stay uncluttered so badges only appear for active stealth states or conditions.
+  - **Per-Player Hiding & Ownership Note:** Undetected and Hidden states apply per player across the party just as they do against monsters. Remember that Foundry still shares map vision if players have Observer permission on each other's character sheets.
+
+- 🌙 **Full Out-of-Combat Stealth & Hidden Movement Support:**
+  - **Works Behind Walls & Around Corners:** Rolling **Hide** or **Sneak** (as well as **Avoid Notice** during exploration) now evaluates nearby observers even behind walls and corners up to 60 ft away, instead of skipping them outside combat.
+  - **Reliable Player Hidden-Move Prompts:** When a player drags a Hidden token without rolling **Sneak** first, movement stops immediately and the Game Master now reliably receives the quick decision bar to reveal and move, move secretly with a `?` marker, roll **Sneak**, or cancel the move.
+  - **Destination Square Checks:** When the Game Master triggers a **Sneak** roll from the hidden-move prompt, lighting and cover are now evaluated directly at the planned destination square rather than the starting spot. Secret blind player **Sneak** and **Avoid Notice** rolls also unlock their follow-up move properly.
+
+- 🤸 **GM Enemy Barrier & Live `T` Tumble Toggle Fix:**
+  - **Consistent GM Movement Rules:** Dragging hostile creatures as Game Master now respects enemy barriers just like player movement, preventing enemies from walking straight through player tokens unintentionally.
+  - **Working `T` Toggle for Game Masters:** Tapping **T** while dragging a hostile token as Game Master now alternates directly between routing around player tokens and tumbling straight through them.
+
+- 🏃 **Automatic PF2e Fallback Speed Update (25 ft):**
+  - **Standard PF2e Default:** Existing worlds that still had the older `30 ft` fallback speed default are updated once automatically to `25 ft` to match standard Pathfinder 2e characters, while custom speeds stay untouched.
+
+=======================================
+
 # Phil's PF2e Action Colours v4.0.0 (2026-11-21)
 
 🚀 **PF2e Stealth & Seek Assistant, Per-Player Visibility, Automatic Attack Cover, Unlimited Routing & Persistent Tactical Badges!**
